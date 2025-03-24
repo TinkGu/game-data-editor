@@ -1,0 +1,31 @@
+.g-icon-warning {
+  width: 53px;
+  height: 53px;
+  display: inline-block;
+  position: relative;
+  background: #fa5151;
+  border-radius: 50%;
+  &::before {
+    content: '';
+    width: 6px;
+    position: absolute;
+    left: 24px;
+    top: 12px;
+    border-bottom: 0;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-top: 40px solid #fff;
+    transform: scale(0.5);
+    transform-origin: left top;
+  }
+  &::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    left: 24px;
+    top: 36px;
+    border-radius: 50%;
+    background: #fff;
+  }
+}

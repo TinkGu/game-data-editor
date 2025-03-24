@@ -1,0 +1,231 @@
+.ability-editor {
+  .tip {
+    padding: 10px;
+    padding-bottom: 0;
+    color: #aaa;
+    font-size: 11px;
+  }
+
+  .section {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+.tags-area {
+  width: 100%;
+  padding: 10px 0;
+  text-align: left;
+}
+
+.root-tags-picker {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.tag {
+  position: relative;
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  word-break: break-all;
+  font-size: 13px;
+  background-color: hsl(0, 0%, 90%);
+  color: hsl(0, 0%, 30%);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+
+  &.grey {
+  }
+
+  &.red {
+    background-color: hsl(0, 100%, 90%);
+    color: hsl(0, 100%, 30%);
+  }
+
+  &.blue {
+    background-color: hsl(212, 100%, 90%);
+    color: hsl(212, 100%, 30%);
+  }
+
+  &.green {
+    background-color: hsl(136, 100%, 90%);
+    color: hsl(136, 100%, 30%);
+  }
+
+  &.yellow {
+    background-color: hsl(45, 100%, 90%);
+    color: hsl(45, 100%, 30%);
+  }
+
+  &.purple {
+    background-color: hsl(270, 100%, 90%);
+    color: hsl(270, 100%, 30%);
+  }
+
+  &.pink {
+    background-color: hsl(330, 100%, 90%);
+    color: hsl(330, 100%, 30%);
+  }
+
+  &.active {
+    transition: filter 0.2s ease;
+    border: 1px solid currentColor;
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  &.sm {
+    margin: 2px 4px;
+    padding: 4px 6px;
+    border-radius: 2px;
+    font-size: 11px;
+  }
+}
+
+.records {
+  border-top: solid 1px #ededed;
+}
+
+.actions {
+  display: flex;
+  padding: 6px 10px;
+  border-bottom: solid 1px #ededed;
+
+  .btn {
+    margin-right: 10px;
+    color: #36c;
+    font-size: 12px;
+
+    &.active {
+      color: #aaa;
+    }
+    .btn-tip {
+      color: #aaa;
+    }
+  }
+}
+
+.ability-item {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-bottom: solid 1px #ededed;
+  .name {
+    padding-left: 4px;
+    padding-right: 10px;
+    color: #36c;
+  }
+  .desc {
+    color: #777;
+  }
+
+  .tags {
+    margin-top: 4px;
+  }
+}
+
+.modal {
+  color: #333;
+  text-align: left;
+}
+
+.factor-editor {
+  width: 100%;
+  padding: 10px 30px;
+  min-height: 70vh;
+
+  .text-area {
+    margin-bottom: 10px;
+  }
+
+  .editor-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .btn {
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 13px;
+      color: #36c;
+
+      &:last-of-type {
+        margin: 0;
+      }
+
+      &.close {
+        color: #aaa;
+      }
+
+      &.danger {
+        color: rgb(233, 79, 19);
+      }
+    }
+  }
+
+  .tags-picker {
+    border-top: solid 1px #ededed;
+  }
+}
+
+.input-style {
+  width: 300px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:focus {
+    border: 1px solid #aaa;
+  }
+
+  &::placeholder {
+    color: #aaa; /* 占位符颜色 */
+  }
+
+  &.transparent {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    background-color: transparent;
+    &:focus {
+      border: none;
+    }
+  }
+}
+
+.tag-groups {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 10px;
+  min-height: 40px;
+
+  .tag-group {
+    width: 50%;
+  }
+}
+
+.selects {
+  padding: 30px;
+  .select-option {
+    padding: 10px 0;
+    font-size: 16px;
+    color: #36c;
+    border-bottom: solid 1px #ededed;
+
+    .tip {
+      margin-left: 16px;
+      font-size: 12px;
+      color: #aaa;
+    }
+  }
+}
