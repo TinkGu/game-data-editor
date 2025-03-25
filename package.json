@@ -9,6 +9,7 @@
   "scripts": {
     "start": "NODE_ENV=development vite --config ./web/vite.config.ts",
     "build": "vite build --config ./web/vite.config.ts",
+    "preview": "vite preview --config ./web/vite.config.ts",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d web/dist"
   },

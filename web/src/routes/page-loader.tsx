@@ -23,7 +23,7 @@ function renderPage(options: PageOptions) {
   };
 }
 
-const BASE_PATH = '/';
+const BASE_PATH = import.meta.env.BASE_URL;
 
 /** 路由配置函数 */
 export function page<Query extends QueryObject = any>(options: PageOptions) {

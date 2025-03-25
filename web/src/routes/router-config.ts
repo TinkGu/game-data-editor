@@ -6,6 +6,4 @@ export const RouteEditorAbility = page({
   component: () => import('../pages/ability'),
 });
 
-export const routeConfigs = [
-  RouteEditorAbility
-];
+export const routeConfigs = [RouteEditorAbility];
