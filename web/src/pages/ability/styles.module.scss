@@ -9,6 +9,12 @@
   .section {
     padding: 10px;
     font-size: 13px;
+
+    .label {
+      border-radius: 3px;
+      padding: 4px 8px;
+      background: #e6e6e6;
+    }
   }
 }
 
@@ -26,7 +32,7 @@
 .tag {
   position: relative;
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 10px;
   margin-bottom: 4px;
   padding: 4px 8px;
   border-radius: 4px;
@@ -54,7 +60,7 @@
   }
 
   &.green {
-    background-color: hsl(136, 100%, 90%);
+    background-color: rgba(218, 246, 234);
     color: hsl(136, 100%, 30%);
   }
 
@@ -68,9 +74,14 @@
     color: hsl(270, 100%, 30%);
   }
 
-  &.pink {
-    background-color: hsl(330, 100%, 90%);
-    color: hsl(330, 100%, 30%);
+  &.purples {
+    color: #454ce1;
+    background-color: rgba(100, 108, 255, 0.08);
+  }
+
+  &.grass {
+    background-color: rgba(232, 247, 207);
+    color: rgba(42, 66, 0);
   }
 
   &.active {

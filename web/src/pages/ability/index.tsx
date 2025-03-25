@@ -71,7 +71,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
 }
 
 function ColorPicker({ value, onChange }: { value?: string; onChange?: (x: string) => void }) {
-  const colors = ['grey', 'red', 'yellow', 'green', 'blue', 'purple', 'pink'];
+  const colors = ['grey', 'red', 'yellow', 'green', 'grass', 'blue', 'purple', 'purples'];
   return (
     <div className={cx('color-picker')}>
       {colors.map((x) => (
@@ -501,7 +501,7 @@ function ExplorePannel({ onExit }: { onExit: () => void }) {
       <div className={cx('tip')}>选中标签后，只出现与这个标签有关的组合</div>
       <TagPicker disableAdd className={cx('root-tags-picker')} tags={tags} onClickTag={handleClickTag} />
       <div className={cx('section')}>
-        未发现的组合
+        <span className={cx('label')}>未发现的组合</span>
         <span className={cx('tip')}>点击组合可以快速创建</span>
       </div>
       <div className={cx('tag-groups')}>
@@ -521,7 +521,9 @@ function ExplorePannel({ onExit }: { onExit: () => void }) {
           </div>
         ))}
       </div>
-      <div className={cx('section')}>已发现的组合</div>
+      <div className={cx('section')}>
+        <span className={cx('label')}>已发现的组合</span>
+      </div>
       {!!groups?.length && (
         <div className={cx('records')}>
           {groups.map((x) => (
