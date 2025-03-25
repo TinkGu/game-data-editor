@@ -7,10 +7,10 @@
   "type": "module",
   "homepage": "http://TinkGu.github.io/game-data-editor",
   "scripts": {
-    "start": "vite --config ./web/vite.config.ts",
+    "start": "NODE_ENV=development vite --config ./web/vite.config.ts",
     "build": "vite build --config ./web/vite.config.ts",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d web/dist"
   },
   "license": "ISC",
   "dependencies": {
