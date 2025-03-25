@@ -376,9 +376,10 @@ function AbilityEditor({
         </div>
       </div>
       <div className={cx('text-area')}>
-        # <input ref={nameRef} className={cx('input-style', 'transparent')} placeholder="标题" />
+        <span className={cx('sharp')}>#</span>
+        <input ref={nameRef} className={cx('input-style', 'transparent', 'title')} placeholder="标题" />
       </div>
-      <div className={cx('text-area')}>
+      <div>
         <textarea ref={descRef} className={cx('input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
       </div>
       <div className={cx('tags')}>

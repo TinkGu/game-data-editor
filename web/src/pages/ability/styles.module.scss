@@ -92,7 +92,8 @@
   }
 
   &.sm {
-    margin: 2px 4px;
+    margin-right: 4px;
+    margin-bottom: 2px;
     padding: 4px 6px;
     border-radius: 2px;
     font-size: 11px;
@@ -145,20 +146,27 @@
   text-align: left;
 }
 
+.text-area {
+  margin-bottom: 10px;
+
+  .sharp {
+    color: #888;
+    font-size: 16px;
+    margin-right: 10px;
+    font-family: monospace;
+  }
+}
+
 .factor-editor {
   width: 100%;
   padding: 10px 30px;
   min-height: 70vh;
   text-align: left;
 
-  .text-area {
-    margin-bottom: 10px;
-  }
-
   .editor-actions {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     .btn {
       display: inline-block;
@@ -186,15 +194,21 @@
 }
 
 .input-style {
-  width: 300px;
+  width: 100%;
   padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: #666;
   background-color: #fff;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s;
+
+  &.title {
+    width: 240px;
+    font-size: 16px;
+    color: #333;
+  }
 
   &:focus {
     border: 1px solid #aaa;
