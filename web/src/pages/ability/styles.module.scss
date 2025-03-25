@@ -94,13 +94,13 @@
 
 .actions {
   display: flex;
-  padding: 6px 10px;
+  padding: 8px 10px;
   border-bottom: solid 1px #ededed;
 
   .btn {
-    margin-right: 10px;
+    margin-right: 16px;
     color: #36c;
-    font-size: 12px;
+    font-size: 13px;
 
     &.active {
       color: #aaa;
@@ -138,6 +138,7 @@
   width: 100%;
   padding: 10px 30px;
   min-height: 70vh;
+  text-align: left;
 
   .text-area {
     margin-bottom: 10px;
