@@ -18,6 +18,19 @@ function getIntersection(a: any[], b: any[]) {
   return a.filter((x) => b.indexOf(x) > -1);
 }
 
+/** a 完整包含 b */
+function fullIncludes(a: any[], b: any[]) {
+  if (!a.length || !b.length) {
+    return false;
+  }
+  for (let x of b) {
+    if (!a.includes(x)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 interface Ability {
   id: number;
   name: string;
@@ -545,12 +558,16 @@ export default function PageEditorAbilityList() {
   const [filterType, setFilterType] = useState<'some' | 'every'>('some');
 
   useEffect(() => {
-    if (tags.length) {
-      const list = db.atom.get().items;
-      const next = list.filter((x) => x.tags?.length && getIntersection(x.tags, tags)?.length);
-      setRecords(next);
+    if (!tags.length) return;
+    const list = db.atom.get().items;
+    let next = list;
+    if (filterType === 'every') {
+      next = list.filter((x) => !!x.tags?.length && fullIncludes(x.tags, tags));
+    } else {
+      next = list.filter((x) => !!x.tags?.length && getIntersection(x.tags, tags)?.length);
     }
-  }, [tags, items]);
+    setRecords(next);
+  }, [tags, items, filterType]);
 
   useEffect(() => {
     db.pull();
@@ -628,7 +645,7 @@ export default function PageEditorAbilityList() {
           ))}
         </div>
       )}
-      {!records?.length && !!items?.length && (
+      {!tags.length && !records?.length && !!items?.length && (
         <div className={cx('records')}>
           {items.map((x) => (
             <AbilityItem ability={x} key={x.id} />
