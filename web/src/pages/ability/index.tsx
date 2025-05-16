@@ -508,7 +508,6 @@ export default function PageEditorAbilityList() {
   const [filterType, setFilterType] = useState<'some' | 'every'>('some');
 
   useEffect(() => {
-    if (!tags.length) return;
     const list = db.atom.get().items;
     let next = list;
     if (filterType === 'every') {
