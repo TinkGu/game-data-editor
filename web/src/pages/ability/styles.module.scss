@@ -19,8 +19,7 @@
 }
 
 .root-tags-picker {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
 }
 
 .records {
@@ -178,4 +177,22 @@
       color: #aaa;
     }
   }
+}
+
+.category-label {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  padding-left: 0;
+  border-radius: 4px;
+  white-space: nowrap;
+  word-break: break-all;
+  font-size: 13px;
+  color: #36c;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+  opacity: 0.8;
 }

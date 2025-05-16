@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal, toast } from 'app/components';
-import { ColorPicker, TagPicker } from 'app/components/tag';
+import { ColorPicker, TagItem, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { getDataset } from 'xeno/event';
@@ -48,9 +48,37 @@ function DbTagPicker({
   disableAdd?: boolean;
   onClick: (x: { id: number }) => void;
 }) {
-  const { tagMap } = useAtomView(db.atom);
-  const tagList = Object.keys(tagMap).map((x) => ({ id: Number(x), name: tagMap[x][0], color: tagMap[x][1] || '' }));
-  return <TagPicker tagList={tagList} onClick={onClick} className={className} onAdd={addFactor} value={tags} disableAdd={disableAdd} />;
+  const { tagMap, groupMap } = useAtomView(db.atom);
+  const tagList = [] as TagItem[];
+  const categroyMap = {} as Record<number, TagItem[]>;
+  Object.keys(tagMap).forEach((x) => {
+    const grouoId = tagMap[x]?.[2] || 0;
+    const item = { id: Number(x), name: tagMap[x][0], color: tagMap[x][1] };
+    if (!grouoId) {
+      tagList.push(item);
+      return;
+    }
+    if (!categroyMap[grouoId]) {
+      categroyMap[grouoId] = [];
+    }
+    categroyMap[grouoId].push(item);
+  });
+
+  return (
+    <div className={cx(className)}>
+      <TagPicker key={0} tagList={tagList} onClick={onClick} onAdd={addFactor} value={tags} disableAdd={disableAdd} />
+      {Object.keys(categroyMap).map((gid) => (
+        <TagPicker
+          prefix={<span className={cx('category-label')}>{groupMap[gid]?.[0] || ''}</span>}
+          key={gid}
+          tagList={categroyMap[gid]}
+          onClick={onClick}
+          value={tags}
+          disableAdd
+        />
+      ))}
+    </div>
+  );
 }
 
 function AbilityItem({ ability }: { ability: Ability }) {

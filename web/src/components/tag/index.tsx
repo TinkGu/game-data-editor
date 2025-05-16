@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import classnames from 'classnames/bind';
 import { getDataset } from 'xeno/event';
 import { useDebounceFn } from 'xeno/react';
@@ -20,6 +21,7 @@ export function TagPicker({
   onAdd,
   sm,
   simple,
+  prefix,
 }: {
   value?: number[];
   tagList: TagItem[];
@@ -30,6 +32,7 @@ export function TagPicker({
   onClick: (x: { id: number }) => void;
   sm?: boolean;
   simple?: boolean;
+  prefix?: ReactNode;
 }) {
   const handleClickTag = (e: any) => {
     const { id } = getDataset(e);
@@ -42,6 +45,7 @@ export function TagPicker({
 
   return (
     <div className={cx('tags-area', className)}>
+      {prefix}
       {!disableAdd && (
         <span className={cx('g-tag')} onClick={handleAdd}>
           +
