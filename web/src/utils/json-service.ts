@@ -87,7 +87,7 @@ export class JsonDb<T> {
   save = async () => {
     const content = this.atom.get();
     (content as any).id = this.idRef;
-    await postGitFile({ repo: this.repo, path: this.path, content: content });
+    await postGitFile({ repo: this.repo, path: this.path, content });
   };
 
   /** 从远端下载 */

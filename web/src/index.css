@@ -18,3 +18,78 @@ body {
 .txt-shadow {
   text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.5), 0px 0px 2px rgba(0, 0, 0, 0.2), 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
+
+.g-tag {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  word-break: break-all;
+  font-size: 13px;
+  background-color: hsl(0, 0%, 90%);
+  color: hsl(0, 0%, 30%);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+
+  &.red {
+    background-color: hsl(0, 100%, 90%);
+    color: hsl(0, 100%, 30%);
+  }
+
+  &.blue {
+    background-color: hsl(212, 100%, 90%);
+    color: hsl(212, 100%, 30%);
+  }
+
+  &.green {
+    background-color: rgba(218, 246, 234);
+    color: hsl(136, 100%, 30%);
+  }
+
+  &.yellow {
+    background-color: hsl(45, 100%, 90%);
+    color: hsl(45, 100%, 30%);
+  }
+
+  &.purple {
+    background-color: hsl(270, 100%, 90%);
+    color: hsl(270, 100%, 30%);
+  }
+
+  &.purples {
+    color: #454ce1;
+    background-color: rgba(100, 108, 255, 0.08);
+  }
+
+  &.grass {
+    background-color: rgba(232, 247, 207);
+    color: rgba(42, 66, 0);
+  }
+
+  &.active {
+    transition: filter 0.2s ease;
+    border: 1px solid currentColor;
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  &.simple {
+    &.active {
+      color: #454ce1;
+      background-color: rgba(100, 108, 255, 0.08);
+    }
+  }
+
+  &.sm {
+    margin-right: 4px;
+    margin-bottom: 2px;
+    padding: 4px 6px;
+    border-radius: 2px;
+    font-size: 11px;
+  }
+}

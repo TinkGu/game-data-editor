@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal, toast } from 'app/components';
+import { ColorPicker, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
-import { Atom, useAtomView } from 'use-atom-view';
+import { useAtomView } from 'use-atom-view';
 import { getDataset } from 'xeno/event';
 import { useDebounceFn } from 'xeno/react';
 import { trim } from 'xeno/string';
-import { JsonDb } from '../../utils/json-service';
+import { GroupList } from './group-editor';
+import { db, Ability, store } from './state';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -31,30 +33,24 @@ function fullIncludes(a: any[], b: any[]) {
   return true;
 }
 
-interface Ability {
-  id: number;
-  name: string;
-  desc: string;
-  tags: number[];
-  category: string;
-}
-
-const db = new JsonDb({
-  repo: 'private-cloud',
-  path: 'match3/ability',
-  atom: Atom.of({
-    items: [] as Ability[],
-    tagMap: {} as Record<number, [string, string]>,
-  }),
-});
-
-const store = Atom.of({
-  /** 当前圈选的 tags */
-  tags: [] as number[],
-});
-
 function getTag(tagId: number) {
   return db.atom.get().tagMap[tagId];
+}
+
+function DbTagPicker({
+  disableAdd,
+  tags,
+  className = '',
+  onClick,
+}: {
+  tags: number[];
+  className?: string;
+  disableAdd?: boolean;
+  onClick: (x: { id: number }) => void;
+}) {
+  const { tagMap } = useAtomView(db.atom);
+  const tagList = Object.keys(tagMap).map((x) => ({ id: Number(x), name: tagMap[x][0], color: tagMap[x][1] || '' }));
+  return <TagPicker tagList={tagList} onClick={onClick} className={className} onAdd={addFactor} value={tags} disableAdd={disableAdd} />;
 }
 
 function AbilityItem({ ability }: { ability: Ability }) {
@@ -73,7 +69,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
           const tag = getTag(x);
           if (!tag) return null;
           return (
-            <span className={cx('tag', 'sm', tag[1] || '')} key={x}>
+            <span className={cx('g-tag', 'sm', tag[1] || '')} key={x}>
               {tag[0]}
             </span>
           );
@@ -83,22 +79,10 @@ function AbilityItem({ ability }: { ability: Ability }) {
   );
 }
 
-function ColorPicker({ value, onChange }: { value?: string; onChange?: (x: string) => void }) {
-  const colors = ['grey', 'red', 'yellow', 'green', 'grass', 'blue', 'purple', 'purples'];
-  return (
-    <div className={cx('color-picker')}>
-      {colors.map((x) => (
-        <span key={x} className={cx('tag', x, { active: x === value })} onClick={() => onChange?.(x)}>
-          色
-        </span>
-      ))}
-    </div>
-  );
-}
-
 interface TagFactor {
   txt: string;
   color?: string;
+  groupId?: number;
 }
 
 function FactorEditor({
@@ -114,6 +98,7 @@ function FactorEditor({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [color, setColor] = useState('');
+  const [groupId, setGroupId] = useState(0);
 
   const handleDelete = useDebounceFn(async () => {
     try {
@@ -132,7 +117,7 @@ function FactorEditor({
         toast.info('未输入');
         return;
       }
-      await onSave({ txt, color });
+      await onSave({ txt, color, groupId });
       onDestory();
     } catch (err) {
       console.error(err);
@@ -147,6 +132,9 @@ function FactorEditor({
     }
     if (value.color) {
       setColor(value.color);
+    }
+    if (value.groupId) {
+      setGroupId(value.groupId);
     }
   }, [value]);
 
@@ -171,6 +159,7 @@ function FactorEditor({
         <input ref={inputRef} className={cx('input-style', 'transparent')} placeholder="输入" />
       </div>
       <ColorPicker value={color} onChange={setColor} />
+      <GroupList value={groupId} onClick={setGroupId} />
     </div>
   );
 }
@@ -187,7 +176,7 @@ const addFactor = () => {
       ...x,
       tagMap: {
         ...tagMap,
-        [db.uuid()]: [value.txt, value.color || ''],
+        [db.uuid()]: [value.txt, value.color || '', value.groupId || 0],
       },
     }));
     await db.save();
@@ -227,9 +216,9 @@ const editFactor = ({ id }: { id: number }) => {
 
   const onSave = async (value: TagFactor) => {
     const { tagMap } = db.atom.get();
-    const [txt, color] = tag;
+    const [txt, color, grouoId] = tag;
     // 未修改，退出
-    if (txt === value.txt && color === value.color) return;
+    if (txt === value.txt && color === value.color && grouoId === value.groupId) return;
 
     if (txt !== value.txt) {
       const names = Object.values(tagMap).map((x) => x[0]);
@@ -241,7 +230,7 @@ const editFactor = ({ id }: { id: number }) => {
       ...x,
       tagMap: {
         ...tagMap,
-        [id]: [value.txt, value.color || ''],
+        [id]: [value.txt, value.color || '', value.groupId || 0],
       },
     }));
     await db.save();
@@ -256,45 +245,6 @@ const editFactor = ({ id }: { id: number }) => {
     ),
   });
 };
-
-function TagPicker({
-  disableAdd,
-  tags,
-  className = '',
-  onClickTag,
-}: {
-  tags: number[];
-  className?: string;
-  onClickTag: (x: { id: number }) => void;
-  disableAdd?: boolean;
-}) {
-  const { tagMap } = useAtomView(db.atom);
-  const tagList = Object.keys(tagMap).map((x) => ({ id: Number(x), name: tagMap[x][0], color: tagMap[x][1] || '' }));
-  const handleClickTag = (e: any) => {
-    const { id } = getDataset(e);
-    onClickTag?.({ id });
-  };
-  return (
-    <div className={cx('tags-area', className)}>
-      {!disableAdd && (
-        <span className={cx('tag')} onClick={addFactor}>
-          +
-        </span>
-      )}
-      {tagList.map((x) => (
-        <span
-          className={cx('tag', { active: tags.includes(x.id) }, x.color)}
-          key={x.id}
-          data-id={x.id}
-          data-id-t="number"
-          onClick={handleClickTag}
-        >
-          {x.name}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 /** 新增特性 */
 function AbilityEditor({
@@ -395,18 +345,18 @@ function AbilityEditor({
       <div>
         <textarea ref={descRef} className={cx('input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
       </div>
-      <div className={cx('tags')}>
+      <div>
         {abTags.map((x) => {
           const tag = getTag(x);
           if (!tag) return null;
           return (
-            <span className={cx('tag', 'sm', tag[1] || '')} key={x}>
+            <span className={cx('g-tag', 'sm', tag[1] || '')} key={x}>
               {tag[0]}
             </span>
           );
         })}
       </div>
-      <TagPicker tags={abTags} onClickTag={handleClickTag} className="tags-picker" />
+      <DbTagPicker tags={abTags} onClick={handleClickTag} className={cx('tags-picker')} />
     </div>
   );
 }
@@ -513,7 +463,7 @@ function ExplorePannel({ onExit }: { onExit: () => void }) {
       </div>
 
       <div className={cx('tip')}>选中标签后，只出现与这个标签有关的组合</div>
-      <TagPicker disableAdd className={cx('root-tags-picker')} tags={tags} onClickTag={handleClickTag} />
+      <DbTagPicker disableAdd className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} />
       <div className={cx('section')}>
         <span className={cx('label')}>未发现的组合</span>
         <span className={cx('tip')}>点击组合可以快速创建</span>
@@ -526,7 +476,7 @@ function ExplorePannel({ onExit }: { onExit: () => void }) {
                 const tag = getTag(x);
                 if (!tag) return null;
                 return (
-                  <span className={cx('tag', tag[1] || '')} key={x}>
+                  <span className={cx('g-tag', tag[1] || '')} key={x}>
                     {tag[0]}
                   </span>
                 );
@@ -637,7 +587,7 @@ export default function PageEditorAbilityList() {
           <span className={cx('btn-tip')}>{filterType === 'some' ? '含有' : '重叠'}</span>
         </div>
       </div>
-      <TagPicker className={cx('root-tags-picker')} tags={tags} onClickTag={handleClickTag} />
+      <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} />
       {!!records?.length && (
         <div className={cx('records')}>
           {records.map((x) => (
