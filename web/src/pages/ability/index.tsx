@@ -130,6 +130,11 @@ function FactorEditor({
 
   const handleDelete = useDebounceFn(async () => {
     try {
+      const isOk = await Modal.showAsync({
+        type: 'confirm',
+        content: '确定删除吗',
+      });
+      if (!isOk) return;
       await onDelete?.();
       onDestory();
     } catch (err) {
@@ -292,6 +297,11 @@ function AbilityEditor({
 
   const handleDelete = useDebounceFn(async () => {
     try {
+      const isOk = await Modal.showAsync({
+        type: 'confirm',
+        content: '确定删除吗',
+      });
+      if (!isOk) return;
       await onDelete?.();
       onDestory();
     } catch (err) {
