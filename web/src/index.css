@@ -35,6 +35,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1;
+  cursor: pointer;
 
   &.red {
     background-color: hsl(0, 100%, 90%);

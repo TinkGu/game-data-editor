@@ -610,11 +610,11 @@ export default function PageEditorAbilityList() {
   return (
     <div className={cx('ability-editor')}>
       <div className={cx('actions')}>
-        <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
-          {editMode ? '退出编辑' : '编辑标签'}
-        </div>
         <div className={cx('btn')} onClick={() => addAbilityItem()}>
           新增条目
+        </div>
+        <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
+          {editMode ? '退出编辑' : '编辑标签'}
         </div>
         <div className={cx('btn')} onClick={() => setExploreMode(true)}>
           探索未知
