@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { getDataset, trim } from '@tinks/xeno';
+import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
 import { ColorPicker, TagItem, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
-import { getDataset } from 'xeno/event';
-import { useDebounceFn } from 'xeno/react';
-import { trim } from 'xeno/string';
 import { GroupList } from './group-editor';
 import { db, Ability, store } from './state';
 import styles from './styles.module.scss';

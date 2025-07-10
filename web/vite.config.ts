@@ -8,12 +8,6 @@ export default defineConfig({
   plugins: [react()],
   root: path.resolve(__dirname),
   resolve: {
-    alias: [
-      { find: 'app', replacement: path.resolve(__dirname, 'src') },
-      {
-        find: 'xeno',
-        replacement: path.resolve(__dirname, '../xeno'),
-      },
-    ],
+    alias: [{ find: 'app', replacement: path.resolve(__dirname, 'src') }],
   },
 });

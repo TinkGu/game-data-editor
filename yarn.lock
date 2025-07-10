@@ -497,6 +497,16 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
+"@tinks/xeno@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/@tinks/xeno/-/xeno-1.0.0.tgz#f81455ff2536290dfa8ab02618bf1c60560fcee0"
+  integrity sha512-M1AV6KZraHvxkSgKf6KdfYwMNI2PNNs5RjXWtu20o7g7mrwTEstIfThp3taRWyT3qHY0wCqML3f9oSMeZZtVbA==
+  dependencies:
+    "@types/lodash" "^4.14.182"
+    "@types/qs" "6.9.1"
+    lodash "^4.17.21"
+    qs "^6.9.1"
+
 "@trivago/prettier-plugin-sort-imports@^2.0.2":
   version "2.0.4"
   resolved "https://registry.npmmirror.com/@trivago/prettier-plugin-sort-imports/-/prettier-plugin-sort-imports-2.0.4.tgz#2e5bbf80bd87e919202f791008a2fbcdbb2a566f"

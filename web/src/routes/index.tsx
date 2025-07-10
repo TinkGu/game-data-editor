@@ -1,5 +1,5 @@
 import { Switch, Route, Router } from 'react-router-dom';
-import { getHistory } from 'xeno/navigate';
+import { getHistory } from '@tinks/xeno/navigate';
 import { routeConfigs } from './router-config';
 
 export default () => (

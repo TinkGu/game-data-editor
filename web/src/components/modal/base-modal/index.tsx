@@ -1,6 +1,6 @@
 import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
+import { useDebounceImmediateFn } from '@tinks/xeno/react';
 import cx from 'classnames';
-import { useDebounceImmediateFn } from 'xeno/react';
 import { BasePopup, PopupProps } from '../../popup';
 import { PortalChildren } from '../../portal/base';
 import { getBtnText, TYPE_MAP } from './util';

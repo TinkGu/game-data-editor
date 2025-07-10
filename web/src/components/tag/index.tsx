@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
+import { getDataset } from '@tinks/xeno';
+import { useDebounceFn } from '@tinks/xeno/react';
 import classnames from 'classnames/bind';
-import { getDataset } from 'xeno/event';
-import { useDebounceFn } from 'xeno/react';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);

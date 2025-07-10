@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef } from 'react';
+import { trim } from '@tinks/xeno';
+import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
 import { TagItem, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
-import { useDebounceFn } from 'xeno/react';
-import { trim } from 'xeno/string';
 import { db } from '../state';
 import styles from '../styles.module.scss';
 

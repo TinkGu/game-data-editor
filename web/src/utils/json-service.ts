@@ -1,6 +1,6 @@
+import { qsParse } from '@tinks/xeno';
 import axios from 'axios';
 import { Atom } from 'use-atom-view';
-import { qsParse } from 'xeno/url';
 
 // TODO: 如何防止多端冲突
 const token = qsParse(window.location.href)?.token;

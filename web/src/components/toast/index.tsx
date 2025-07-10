@@ -1,6 +1,6 @@
 import React from 'react';
+import { getErrorMsg } from '@tinks/xeno';
 import cx from 'classnames';
-import { getErrorMsg } from 'xeno/error';
 import { Popup } from '../popup';
 import './styles.scss';
 

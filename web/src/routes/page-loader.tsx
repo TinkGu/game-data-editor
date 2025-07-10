@@ -1,4 +1,4 @@
-import { navigate, NavigateOpts, QueryObject } from 'xeno/navigate';
+import { navigate, NavigateOpts, QueryObject } from '@tinks/xeno/navigate';
 import asyncComponent, { AsyncComponentOptions } from './async-component';
 
 type PageOptions = AsyncComponentOptions & {

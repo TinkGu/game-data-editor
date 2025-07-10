@@ -17,10 +17,9 @@
     "experimentalDecorators": true,
     "jsx": "react-jsx",
     "paths": {
-      "app/*": ["./web/src/*"],
-      "xeno/*": ["./xeno/*"]
+      "app/*": ["./web/src/*"]
     }
   },
-  "include": ["web", "xeno"],
+  "include": ["web"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
