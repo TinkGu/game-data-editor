@@ -412,6 +412,7 @@ const addAbilityItem = (part?: Partial<Ability>) => {
   };
 
   Modal.show({
+    wrapperClassName: cx('ab-editor-modal'),
     type: 'half-screen',
     content: (onDestory) => (
       <div className={cx('modal')}>
@@ -439,6 +440,7 @@ const editAbilityItem = (ability: Ability) => {
   };
 
   Modal.show({
+    wrapperClassName: cx('ab-editor-modal'),
     type: 'half-screen',
     content: (onDestory) => (
       <div className={cx('modal')}>
@@ -643,7 +645,7 @@ export default function PageEditorAbilityList() {
       {!!records?.length && (
         <div className={cx('records')}>
           <div className={cx('total')}>
-            共 <span>{records.length}</span> 条
+            共 <span className={cx('num')}>{records.length}</span> 条
           </div>
           {records.map((x) => (
             <AbilityItem ability={x} key={x.id} />
@@ -653,7 +655,7 @@ export default function PageEditorAbilityList() {
       {!tags.length && !records?.length && !!items?.length && (
         <div className={cx('records')}>
           <div className={cx('total')}>
-            共 <span>{items.length}</span> 条
+            共 <span className={cx('num')}>{items.length}</span> 条
           </div>
           {items.map((x) => (
             <AbilityItem ability={x} key={x.id} />
