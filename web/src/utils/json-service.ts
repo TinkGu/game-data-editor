@@ -70,12 +70,14 @@ export class JsonDb<T> {
   path: string;
   format?: (x: T) => T;
   idRef = 0;
+  saveAfters: Array<() => void>;
 
   constructor({ atom, repo, path, format }: { atom: Atom<T>; repo: string; path: string; format?: <S>(x: T) => S }) {
     this.repo = repo;
     this.atom = atom;
     this.path = path;
     this.format = format;
+    this.saveAfters = [];
   }
 
   uuid = () => {
@@ -88,6 +90,13 @@ export class JsonDb<T> {
     const content = this.atom.get();
     (content as any).id = this.idRef;
     await postGitFile({ repo: this.repo, path: this.path, content });
+    this.saveAfters.forEach((f) => f());
+  };
+
+  /** 当保存时，触发回调 */
+  subscribe = (f: () => void) => {
+    this.saveAfters.push(f);
+    return () => (this.saveAfters = this.saveAfters.filter((x) => x !== f));
   };
 
   /** 从远端下载 */

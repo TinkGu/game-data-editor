@@ -6,7 +6,7 @@ import { ColorPicker, TagItem, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { GroupList } from './group-editor';
-import { db, Ability, store } from './state';
+import { db, Ability, store, setStatsModeMemo, calcStats } from './state';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -41,18 +41,21 @@ function DbTagPicker({
   tags,
   className = '',
   onClick,
+  showBadge,
 }: {
   tags: number[];
   className?: string;
   disableAdd?: boolean;
+  showBadge?: boolean;
   onClick: (x: { id: number }) => void;
 }) {
   const { tagMap, groupMap } = useAtomView(db.atom);
+  const { stats } = store.get();
   const tagList = [] as TagItem[];
   const categroyMap = {} as Record<number, TagItem[]>;
   Object.keys(tagMap).forEach((x) => {
     const grouoId = tagMap[x]?.[2] || 0;
-    const item = { id: Number(x), name: tagMap[x][0], color: tagMap[x][1] };
+    const item = { id: Number(x), name: tagMap[x][0], color: tagMap[x][1], badge: stats[Number(x)] || 0 };
     if (!grouoId) {
       tagList.push(item);
       return;
@@ -65,7 +68,7 @@ function DbTagPicker({
 
   return (
     <div className={cx(className)}>
-      <TagPicker key={0} tagList={tagList} onClick={onClick} onAdd={addFactor} value={tags} disableAdd={disableAdd} />
+      <TagPicker key={0} tagList={tagList} onClick={onClick} onAdd={addFactor} value={tags} disableAdd={disableAdd} showBadge={showBadge} />
       {Object.keys(categroyMap).map((gid) => (
         <TagPicker
           prefix={<span className={cx('category-label')}>{groupMap[gid]?.[0] || ''}</span>}
@@ -74,6 +77,7 @@ function DbTagPicker({
           onClick={onClick}
           value={tags}
           disableAdd
+          showBadge={showBadge}
         />
       ))}
     </div>
@@ -537,7 +541,7 @@ function ExplorePannel({ onExit }: { onExit: () => void }) {
 }
 
 export default function PageEditorAbilityList() {
-  const { tags } = useAtomView(store);
+  const { tags, showStats } = useAtomView(store);
   const { items } = useAtomView(db.atom);
   const [records, setRecords] = useState<Ability[]>([]);
   const [editMode, setEditMode] = useState(false);
@@ -556,7 +560,11 @@ export default function PageEditorAbilityList() {
   }, [tags, items, filterType]);
 
   useEffect(() => {
-    db.pull();
+    async function init() {
+      await db.pull();
+      calcStats();
+    }
+    init();
   }, []);
 
   const handleEnterEditMode = useDebounceFn(() => {
@@ -602,6 +610,10 @@ export default function PageEditorAbilityList() {
     });
   });
 
+  const handleChangeStatsMode = useDebounceFn(() => {
+    setStatsModeMemo(!showStats);
+  });
+
   if (exploreMode) {
     return <ExplorePannel onExit={() => setExploreMode(false)} />;
   }
@@ -610,22 +622,29 @@ export default function PageEditorAbilityList() {
     <div className={cx('ability-editor')}>
       <div className={cx('actions')}>
         <div className={cx('btn')} onClick={() => addAbilityItem()}>
-          新增条目
+          写一条
         </div>
         <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
-          {editMode ? '退出编辑' : '编辑标签'}
+          {editMode ? '退出修改' : '改标签'}
         </div>
         <div className={cx('btn')} onClick={() => setExploreMode(true)}>
-          探索未知
+          探索
         </div>
         <div className={cx('btn')} onClick={handleChangeFilterType}>
           过滤方式：
           <span className={cx('btn-tip')}>{filterType === 'some' ? '含有' : '重叠'}</span>
         </div>
+        <div className={cx('btn')} onClick={handleChangeStatsMode}>
+          统计：
+          <span className={cx('btn-tip')}>{showStats ? '开' : '关'}</span>
+        </div>
       </div>
-      <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} />
+      <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} showBadge={showStats} />
       {!!records?.length && (
         <div className={cx('records')}>
+          <div className={cx('total')}>
+            共 <span>{records.length}</span> 条
+          </div>
           {records.map((x) => (
             <AbilityItem ability={x} key={x.id} />
           ))}
@@ -633,6 +652,9 @@ export default function PageEditorAbilityList() {
       )}
       {!tags.length && !records?.length && !!items?.length && (
         <div className={cx('records')}>
+          <div className={cx('total')}>
+            共 <span>{items.length}</span> 条
+          </div>
           {items.map((x) => (
             <AbilityItem ability={x} key={x.id} />
           ))}

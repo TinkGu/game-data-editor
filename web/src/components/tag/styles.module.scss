@@ -2,3 +2,16 @@
   width: 100%;
   text-align: left;
 }
+
+.tag-wrap {
+  position: relative;
+}
+
+.tag-badge {
+  position: absolute;
+  right: 4px;
+  top: -15px;
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
+}

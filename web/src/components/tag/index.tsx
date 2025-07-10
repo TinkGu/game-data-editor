@@ -10,6 +10,7 @@ export interface TagItem {
   id: number;
   name: string;
   color?: string;
+  badge?: number | string;
 }
 
 export function TagPicker({
@@ -22,6 +23,7 @@ export function TagPicker({
   sm,
   simple,
   prefix,
+  showBadge,
 }: {
   value?: number[];
   tagList: TagItem[];
@@ -33,6 +35,7 @@ export function TagPicker({
   sm?: boolean;
   simple?: boolean;
   prefix?: ReactNode;
+  showBadge?: boolean;
 }) {
   const handleClickTag = (e: any) => {
     const { id } = getDataset(e);
@@ -52,14 +55,16 @@ export function TagPicker({
         </span>
       )}
       {tagList.map((x) => (
-        <span
-          className={cx('g-tag', { active: value?.includes(x.id), sm, simple }, x.color)}
-          key={x.id}
-          data-id={x.id}
-          data-id-t="number"
-          onClick={handleClickTag}
-        >
-          {x.name}
+        <span className={cx('tag-wrap')} key={x.id}>
+          <span
+            className={cx('g-tag', { active: value?.includes(x.id), sm, simple }, x.color)}
+            data-id={x.id}
+            data-id-t="number"
+            onClick={handleClickTag}
+          >
+            {x.name}
+          </span>
+          {!!showBadge && !!x.badge && <span className={cx('tag-badge')}>{x.badge}</span>}
         </span>
       ))}
     </div>
