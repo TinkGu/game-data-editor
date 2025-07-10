@@ -82,7 +82,7 @@
 
 .factor-editor {
   width: 100%;
-  padding: 10px 30px;
+  padding: 10px 16px;
   min-height: 70vh;
   text-align: left;
 
@@ -96,6 +96,7 @@
       margin-right: 20px;
       font-size: 13px;
       color: #36c;
+      cursor: pointer;
 
       &:last-of-type {
         margin: 0;
@@ -113,7 +114,14 @@
 
   .tags-picker {
     padding-top: 8px;
+    padding-bottom: 40px;
     border-top: solid 1px #ededed;
+    height: calc(100vh - 170px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
