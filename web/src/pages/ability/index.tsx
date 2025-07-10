@@ -228,7 +228,7 @@ const addFactor = () => {
 /** 修改因子 */
 const editFactor = ({ id }: { id: number }) => {
   const tag = getTag(id);
-  const value = { txt: tag[0], color: tag[1] };
+  const value = { txt: tag[0], color: tag[1], groupId: tag[2] };
 
   const onDelete = async () => {
     const { tagMap, items } = db.atom.get();
