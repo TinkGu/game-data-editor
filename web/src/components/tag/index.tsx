@@ -11,6 +11,7 @@ export interface TagItem {
   name: string;
   color?: string;
   badge?: number | string;
+  desc?: string;
 }
 
 export function TagPicker({

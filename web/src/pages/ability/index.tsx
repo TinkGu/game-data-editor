@@ -114,6 +114,7 @@ interface TagFactor {
   txt: string;
   color?: string;
   groupId?: number;
+  desc?: string;
 }
 
 function FactorEditor({
@@ -128,6 +129,7 @@ function FactorEditor({
   onDelete?: () => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const descRef = useRef<HTMLInputElement>(null);
   const [color, setColor] = useState('');
   const [groupId, setGroupId] = useState(0);
 
@@ -149,11 +151,12 @@ function FactorEditor({
   const handleSave = useDebounceFn(async () => {
     try {
       const txt = trim(inputRef.current?.value || '');
+      const desc = trim(descRef.current?.value || '');
       if (!txt) {
         toast.info('未输入');
         return;
       }
-      await onSave({ txt, color, groupId });
+      await onSave({ txt, color, groupId, desc });
       onDestory();
     } catch (err) {
       console.error(err);
@@ -171,6 +174,9 @@ function FactorEditor({
     }
     if (value.groupId) {
       setGroupId(value.groupId);
+    }
+    if (value.desc) {
+      descRef.current!.value = value.desc;
     }
   }, [value]);
 
@@ -192,7 +198,10 @@ function FactorEditor({
         </div>
       </div>
       <div className={cx('text-area')}>
-        <input ref={inputRef} className={cx('input-style', 'transparent')} placeholder="输入" />
+        <input ref={inputRef} className={cx('input-style', 'transparent')} placeholder="标签" />
+      </div>
+      <div className={cx('text-area')}>
+        <input ref={descRef} className={cx('input-style', 'transparent')} placeholder="描述" />
       </div>
       <ColorPicker value={color} onChange={setColor} />
       <GroupList value={groupId} onClick={setGroupId} />
@@ -212,7 +221,7 @@ const addFactor = () => {
       ...x,
       tagMap: {
         ...tagMap,
-        [db.uuid()]: [value.txt, value.color || '', value.groupId || 0],
+        [db.uuid()]: [value.txt, value.color || '', value.groupId || 0, value.desc || ''],
       },
     }));
     await db.save();
@@ -231,7 +240,7 @@ const addFactor = () => {
 /** 修改因子 */
 const editFactor = ({ id }: { id: number }) => {
   const tag = getTag(id);
-  const value = { txt: tag[0], color: tag[1], groupId: tag[2] };
+  const value = { txt: tag[0], color: tag[1], groupId: tag[2], desc: tag[3] };
 
   const onDelete = async () => {
     const { tagMap, items } = db.atom.get();
@@ -252,9 +261,9 @@ const editFactor = ({ id }: { id: number }) => {
 
   const onSave = async (value: TagFactor) => {
     const { tagMap } = db.atom.get();
-    const [txt, color, grouoId] = tag;
+    const [txt, color, grouoId, desc] = tag;
     // 未修改，退出
-    if (txt === value.txt && color === value.color && grouoId === value.groupId) return;
+    if (txt === value.txt && color === value.color && grouoId === value.groupId && desc == value.desc) return;
 
     if (txt !== value.txt) {
       const names = Object.values(tagMap).map((x) => x[0]);
@@ -266,7 +275,7 @@ const editFactor = ({ id }: { id: number }) => {
       ...x,
       tagMap: {
         ...tagMap,
-        [id]: [value.txt, value.color || '', value.groupId || 0],
+        [id]: [value.txt, value.color || '', value.groupId || 0, value.desc || ''],
       },
     }));
     await db.save();

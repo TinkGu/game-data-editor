@@ -42,8 +42,8 @@ export const db = new JsonDb({
   path: 'match3/ability',
   atom: Atom.of({
     items: [] as Ability[],
-    /** tag 集合， { id, [名字, 颜色, groupId] }*/
-    tagMap: {} as Record<number, [string, string, number]>,
+    /** tag 集合， { id, [名字, 颜色, groupId, 描述] }*/
+    tagMap: {} as Record<number, [string, string, number, string]>,
     /** 有相同 groupId 的 tag 会单独占据一行显示分类。 { id, [名字] } */
     groupMap: {} as Record<number, [string]>,
   }),
