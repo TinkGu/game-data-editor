@@ -94,8 +94,8 @@ function GroupEditor({
           关闭
         </div>
       </div>
-      <div className={cx('text-area')}>
-        <input ref={inputRef} className={cx('input-style', 'transparent')} placeholder="输入" />
+      <div className={cx('g-text-area')}>
+        <input ref={inputRef} className={cx('g-input-style', 'transparent')} placeholder="输入" />
       </div>
     </div>
   );

@@ -61,3 +61,7 @@ export const store = Atom.of({
 db.subscribe(() => {
   calcStats();
 });
+
+export function getTag(tagId: number) {
+  return db.atom.get().tagMap[tagId];
+}

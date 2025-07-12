@@ -1,0 +1,88 @@
+.ab-editor-modal {
+  :global {
+    .g-half-screen-modal-wrapper {
+      overflow-y: hidden;
+    }
+  }
+}
+
+.modal {
+  color: #333;
+  text-align: left;
+}
+
+.sharp {
+  color: #888;
+  font-size: 16px;
+  margin-right: 10px;
+  font-family: monospace;
+}
+
+.ability-item {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-bottom: solid 1px #ededed;
+  .name {
+    padding-left: 4px;
+    padding-right: 10px;
+    color: #36c;
+  }
+  .desc {
+    color: #777;
+  }
+
+  .tags {
+    margin-top: 4px;
+  }
+}
+
+.ability-editor {
+  width: 100%;
+  padding: 10px 16px;
+  min-height: 70vh;
+  text-align: left;
+
+  .editor-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    .btn {
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 13px;
+      color: #36c;
+      cursor: pointer;
+
+      &:last-of-type {
+        margin: 0;
+      }
+
+      &.close {
+        color: #aaa;
+      }
+
+      &.danger {
+        color: rgb(233, 79, 19);
+      }
+
+      &.info {
+        position: relative;
+        top: -2px;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .tags-picker {
+    padding-top: 8px;
+    padding-bottom: 100px;
+    border-top: solid 1px #ededed;
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-.ability-editor {
+.page-editor {
   .tip {
     padding: 10px;
     padding-bottom: 0;
@@ -89,133 +89,9 @@
   }
 }
 
-.ability-item {
-  padding: 4px 10px;
-  font-size: 13px;
-  border-bottom: solid 1px #ededed;
-  .name {
-    padding-left: 4px;
-    padding-right: 10px;
-    color: #36c;
-  }
-  .desc {
-    color: #777;
-  }
-
-  .tags {
-    margin-top: 4px;
-  }
-}
-
 .modal {
   color: #333;
   text-align: left;
-}
-
-.text-area {
-  margin-bottom: 10px;
-
-  .sharp {
-    color: #888;
-    font-size: 16px;
-    margin-right: 10px;
-    font-family: monospace;
-  }
-}
-
-.ab-editor-modal {
-  :global {
-    .g-half-screen-modal-wrapper {
-      overflow-y: hidden;
-    }
-  }
-}
-
-.factor-editor {
-  width: 100%;
-  padding: 10px 16px;
-  min-height: 70vh;
-  text-align: left;
-
-  .editor-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-
-    .btn {
-      display: inline-block;
-      margin-right: 20px;
-      font-size: 13px;
-      color: #36c;
-      cursor: pointer;
-
-      &:last-of-type {
-        margin: 0;
-      }
-
-      &.close {
-        color: #aaa;
-      }
-
-      &.danger {
-        color: rgb(233, 79, 19);
-      }
-
-      &.info {
-        position: relative;
-        top: -2px;
-        opacity: 0.5;
-      }
-    }
-  }
-
-  .tags-picker {
-    padding-top: 8px;
-    padding-bottom: 100px;
-    border-top: solid 1px #ededed;
-    height: calc(100vh - 200px);
-    overflow-y: scroll;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-}
-
-.input-style {
-  width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #666;
-  background-color: #fff;
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-
-  &.title {
-    width: 240px;
-    font-size: 16px;
-    color: #333;
-  }
-
-  &:focus {
-    border: 1px solid #aaa;
-  }
-
-  &::placeholder {
-    color: #aaa; /* 占位符颜色 */
-  }
-
-  &.transparent {
-    padding-left: 0;
-    padding-right: 0;
-    border: none;
-    background-color: transparent;
-    &:focus {
-      border: none;
-    }
-  }
 }
 
 .tag-groups {
@@ -243,22 +119,4 @@
       color: #aaa;
     }
   }
-}
-
-.category-label {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 4px;
-  padding: 4px 8px;
-  padding-left: 0;
-  border-radius: 4px;
-  white-space: nowrap;
-  word-break: break-all;
-  font-size: 13px;
-  color: #36c;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1;
-  opacity: 0.8;
 }

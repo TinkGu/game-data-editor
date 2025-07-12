@@ -94,3 +94,43 @@ body {
     font-size: 11px;
   }
 }
+
+.g-text-area {
+  margin-bottom: 10px;
+}
+
+.g-input-style {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &.title {
+    width: 240px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  &:focus {
+    border: 1px solid #aaa;
+  }
+
+  &::placeholder {
+    color: #aaa; /* 占位符颜色 */
+  }
+
+  &.transparent {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    background-color: transparent;
+    &:focus {
+      border: none;
+    }
+  }
+}
