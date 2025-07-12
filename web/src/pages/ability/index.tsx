@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
+import { IconSearch } from 'app/components/icons';
 import { ColorPicker, TagItem, TagPicker } from 'app/components/tag';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { GroupList } from './group-editor';
 import { db, Ability, store, setStatsModeMemo, calcStats } from './state';
 import { TagPreview } from './tag-preview';
+import { showSearch } from './tag-search';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -608,6 +610,7 @@ export default function PageEditorAbilityList() {
 
     close = Modal.show({
       type: 'half-screen',
+      maskClosable: true,
       content: () => (
         <div className={cx('modal')}>
           <div className={cx('selects')}>
@@ -653,8 +656,13 @@ export default function PageEditorAbilityList() {
           统计：
           <span className={cx('btn-tip')}>{showStats ? '开' : '关'}</span>
         </div>
-        <div className={cx('btn', 'tag-preview-btn')}>
-          <TagPreview />
+        <div className={cx('rights')}>
+          <div className={cx('btn', 'icon')}>
+            <TagPreview />
+          </div>
+          <div className={cx('btn', 'icon')} onClick={showSearch}>
+            <IconSearch />
+          </div>
         </div>
       </div>
       <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} showBadge={showStats} />

@@ -53,11 +53,31 @@
     font-size: 13px;
     cursor: pointer;
 
+    &:last-of-type {
+      margin-right: 0;
+    }
+
     &.active {
       color: #aaa;
     }
     .btn-tip {
       color: #aaa;
+    }
+  }
+
+  .rights {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    display: flex;
+
+    .btn {
+      margin-right: 6px;
+      &.icon {
+        width: 16px;
+        height: 16px;
+        opacity: 0.5;
+      }
     }
   }
 
@@ -143,7 +163,8 @@
 
       &.info {
         position: relative;
-        top: 5px;
+        top: -2px;
+        opacity: 0.5;
       }
     }
   }
