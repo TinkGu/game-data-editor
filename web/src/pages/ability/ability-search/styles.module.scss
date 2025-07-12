@@ -1,0 +1,115 @@
+.ab-search {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-bottom: 100px;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background-color: #fff;
+  overflow: scroll;
+
+  .header {
+    position: sticky;
+    top: 0;
+    padding-top: 6px;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1;
+    border-bottom: solid 1px #ededed;
+  }
+
+  .actions {
+    padding-top: 6px;
+    width: 100%;
+    height: 30px;
+  }
+
+  .btn {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 13px;
+    color: #36c;
+    cursor: pointer;
+
+    &:last-of-type {
+      margin: 0;
+    }
+
+    &.close {
+      position: absolute;
+      right: 10px;
+      color: #aaa;
+    }
+
+    &.danger {
+      color: rgb(233, 79, 19);
+    }
+  }
+
+  .content {
+    padding: 10px 0;
+    .empty {
+      width: 100%;
+      font-size: 14px;
+      color: #aaa;
+      text-align: center;
+    }
+  }
+}
+
+.search-bar {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  width: 100%;
+}
+
+.search-input {
+  position: relative;
+  width: 100%;
+  input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #666;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+
+    &:focus {
+      border: 1px solid #666;
+    }
+
+    &::placeholder {
+      color: #aaa; /* 占位符颜色 */
+    }
+  }
+
+  .clear-icon {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    opacity: 0.3;
+    z-index: 1;
+  }
+}
+
+.search-icon-wrapper {
+  flex-shrink: 0;
+  position: relative;
+  top: 4px;
+  padding-left: 6px;
+  .search-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.5;
+    z-index: 1;
+  }
+}

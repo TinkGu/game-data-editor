@@ -6,10 +6,10 @@ import { IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, addAbilityItem } from './ability-item';
+import { showSearch } from './ability-search';
 import { DbTagPicker, editFactor } from './factor-editor';
 import { db, Ability, store, setStatsModeMemo, calcStats, getTag } from './state';
 import { TagPreview } from './tag-preview';
-import { showSearch } from './tag-search';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
