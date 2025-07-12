@@ -7,6 +7,7 @@ import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { GroupList } from './group-editor';
 import { db, Ability, store, setStatsModeMemo, calcStats } from './state';
+import { TagPreview } from './tag-preview';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -383,6 +384,9 @@ function AbilityEditor({
               删除
             </div>
           )}
+          <div className={cx('btn', 'info')}>
+            <TagPreview />
+          </div>
         </div>
         <div className={cx('btn', 'close')} onClick={onDestory}>
           关闭
@@ -642,12 +646,15 @@ export default function PageEditorAbilityList() {
           探索
         </div>
         <div className={cx('btn')} onClick={handleChangeFilterType}>
-          过滤方式：
+          筛选：
           <span className={cx('btn-tip')}>{filterType === 'some' ? '含有' : '重叠'}</span>
         </div>
         <div className={cx('btn')} onClick={handleChangeStatsMode}>
           统计：
           <span className={cx('btn-tip')}>{showStats ? '开' : '关'}</span>
+        </div>
+        <div className={cx('btn', 'tag-preview-btn')}>
+          <TagPreview />
         </div>
       </div>
       <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} showBadge={showStats} />
