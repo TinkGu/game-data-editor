@@ -38,9 +38,13 @@
 }
 
 .actions {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   padding: 8px 10px;
   border-bottom: solid 1px #ededed;
+  background: #f6f7f8;
 
   .btn {
     margin-right: 16px;
