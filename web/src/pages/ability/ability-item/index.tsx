@@ -119,15 +119,16 @@ function AbilityEditor({
     try {
       const name = trim(nameRef.current?.value || '');
       const desc = trim(descRef.current?.value || '');
+      const tags = abTags.filter((x) => getTag(x));
       if (!name) return toast.info('未输入name');
       if (!desc) return toast.info('未输入desc');
-      if (!abTags?.length) return toast.info('至少输入一个标签');
+      if (!tags?.length) return toast.info('至少输入一个标签');
+
       await onSave({
         id: value?.id || db.uuid(),
         name,
         desc,
-        tags: abTags,
-        category: '',
+        tags,
       });
       onDestory();
     } catch (err) {
