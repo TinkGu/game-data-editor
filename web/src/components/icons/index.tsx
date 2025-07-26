@@ -38,3 +38,91 @@ export function IconCross({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function IconAll({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10 14C12.2091 14 14 12.2091 14 10C14 7.79086 12.2091 6 10 6C7.79086 6 6 7.79086 6 10C6 12.2091 7.79086 14 10 14Z"
+        fill="#333"
+      />
+      <path
+        d="M24 14C26.2091 14 28 12.2091 28 10C28 7.79086 26.2091 6 24 6C21.7909 6 20 7.79086 20 10C20 12.2091 21.7909 14 24 14Z"
+        fill="#333"
+      />
+      <path
+        d="M38 14C40.2091 14 42 12.2091 42 10C42 7.79086 40.2091 6 38 6C35.7909 6 34 7.79086 34 10C34 12.2091 35.7909 14 38 14Z"
+        fill="#333"
+      />
+      <path
+        d="M10 28C12.2091 28 14 26.2091 14 24C14 21.7909 12.2091 20 10 20C7.79086 20 6 21.7909 6 24C6 26.2091 7.79086 28 10 28Z"
+        fill="#333"
+      />
+      <path
+        d="M24 28C26.2091 28 28 26.2091 28 24C28 21.7909 26.2091 20 24 20C21.7909 20 20 21.7909 20 24C20 26.2091 21.7909 28 24 28Z"
+        fill="#333"
+      />
+      <path
+        d="M38 28C40.2091 28 42 26.2091 42 24C42 21.7909 40.2091 20 38 20C35.7909 20 34 21.7909 34 24C34 26.2091 35.7909 28 38 28Z"
+        fill="#333"
+      />
+      <path
+        d="M10 42C12.2091 42 14 40.2091 14 38C14 35.7909 12.2091 34 10 34C7.79086 34 6 35.7909 6 38C6 40.2091 7.79086 42 10 42Z"
+        fill="#333"
+      />
+      <path
+        d="M24 42C26.2091 42 28 40.2091 28 38C28 35.7909 26.2091 34 24 34C21.7909 34 20 35.7909 20 38C20 40.2091 21.7909 42 24 42Z"
+        fill="#333"
+      />
+      <path
+        d="M38 42C40.2091 42 42 40.2091 42 38C42 35.7909 40.2091 34 38 34C35.7909 34 34 35.7909 34 38C34 40.2091 35.7909 42 38 42Z"
+        fill="#333"
+      />
+    </svg>
+  );
+}
+
+export function IconDraft({ className, color = '#333' }: { className?: string; color?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="12" width="36" height="30" rx="2" fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" />
+      <path d="M17.9497 24.0083L29.9497 24.0083" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 13L13 5H35L42 13" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconDislike({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M15 8C8.92487 8 4 12.9249 4 19C4 30 17 40 24 42.3262C31 40 44 30 44 19C44 12.9249 39.0751 8 33 8C29.2797 8 25.9907 9.8469 24 12.6738C22.0093 9.8469 18.7203 8 15 8Z"
+        fill="none"
+        stroke="#333"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path fillRule="evenodd" clipRule="evenodd" d="M28 20L20 28L28 20Z" fill="none" />
+      <path d="M28 20L20 28" stroke="#333" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M20 20.0001L28 28L20 20.0001Z" fill="none" />
+      <path d="M20 20.0001L28 28" stroke="#333" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconSave({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M24 4L29.2533 7.83204L35.7557 7.81966L37.7533 14.0077L43.0211 17.8197L41 24L43.0211 30.1803L37.7533 33.9923L35.7557 40.1803L29.2533 40.168L24 44L18.7467 40.168L12.2443 40.1803L10.2467 33.9923L4.97887 30.1803L7 24L4.97887 17.8197L10.2467 14.0077L12.2443 7.81966L18.7467 7.83204L24 4Z"
+        fill="none"
+        stroke="#333"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M17 24L22 29L32 19" stroke="#333" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}

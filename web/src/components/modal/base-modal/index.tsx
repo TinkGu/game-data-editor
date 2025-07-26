@@ -78,7 +78,7 @@ function BaseModalInner({
   onOk,
   onCancel,
   onDestroy,
-  mask,
+  mask = true,
   maskClosable,
   wrapperClassName,
   nonePointerEvents,
@@ -124,6 +124,7 @@ function BaseModalInner({
       onDestroy={onDestroy}
       nonePointerEvents={nonePointerEvents}
     >
+      {!!mask && !!isHalfScreen && !!maskClosable && <div className={cx(`${halfScreenPrefix}-mask`)} onClick={handleCancel}></div>}
       <div className={cx(`${prefix}-wrapper`, className, isHalfScreen && `${halfScreenPrefix}-wrapper`)}>
         <div className={cx(`${prefix}-body`)}>
           {!!isWarning && <WarningIcon />}

@@ -45,13 +45,17 @@ export function TagPreviewModal({ onDestory }: { onDestory: () => void }) {
   );
 }
 
+export function showTagPreview() {
+  return Portal.show({
+    content: (onDestory) => {
+      return <TagPreviewModal onDestory={onDestory} />;
+    },
+  });
+}
+
 export function TagPreview({ className }: { className?: string }) {
   const handleClick = useDebounceFn(() => {
-    Portal.show({
-      content: (onDestory) => {
-        return <TagPreviewModal onDestory={onDestory} />;
-      },
-    });
+    showTagPreview();
   });
 
   return (

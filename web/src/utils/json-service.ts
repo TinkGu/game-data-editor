@@ -2,7 +2,6 @@ import { qsParse } from '@tinks/xeno';
 import axios from 'axios';
 import { Atom } from 'use-atom-view';
 
-// TODO: 如何防止多端冲突
 const token = qsParse(window.location.href)?.token;
 
 let shaMap = {};
@@ -12,9 +11,9 @@ const setSHA = ({ repo, path, sha }: { repo: string; path: string; sha: string }
   shaMap[`${repo}_${path}`] = sha;
 };
 
-async function getJsonFile({ repo, path }: { repo: string; path: string }) {
+export async function getJsonFile({ repo, path, ext = 'json' }: { repo: string; path: string; ext?: string }) {
   if (!token) return {};
-  const res = await axios.get(`https://api.github.com/repos/TinkGu/${repo}/contents/${path}.json`, {
+  const res = await axios.get(`https://api.github.com/repos/${repo}/contents/${path}.${ext}`, {
     headers: {
       Authorization: `token ${token}`,
     },
@@ -24,9 +23,13 @@ async function getJsonFile({ repo, path }: { repo: string; path: string }) {
   }
   if (res.data.content) {
     const str = new TextDecoder().decode(Uint8Array.from(window.atob(res.data.content), (c) => c.charCodeAt(0)));
-    const json = JSON.parse(str);
-    console.log(json);
-    return json;
+    if (ext === 'json') {
+      const json = JSON.parse(str);
+      console.log(json);
+      return json;
+    } else {
+      return str;
+    }
   }
   return res.data;
 }
@@ -38,7 +41,7 @@ async function postGitFile({ repo, path, content }: { repo: string; path: string
     throw { message: 'content 必须是一个 JSON 安全的对象' };
   }
   const jsonString = JSON.stringify(content, null, 2);
-  const apiUrl = `https://api.github.com/repos/TinkGu/${repo}/contents/${path}.json`;
+  const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}.json`;
   let sha = getSHA({ repo, path });
   if (!sha) {
     await getJsonFile({ repo, path });
