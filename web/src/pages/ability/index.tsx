@@ -41,6 +41,7 @@ function fullIncludes(a: any[], b: any[]) {
 export default function PageEditorAbilityList() {
   const { tags, showStats, filterType } = useAtomView(store);
   const { items } = useAtomView(db.atom);
+  const { items: draftItems } = useAtomView(draftDb.atom);
   const [records, setRecords] = useState<Ability[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [exploreMode, setExploreMode] = useState(false);
@@ -123,7 +124,7 @@ export default function PageEditorAbilityList() {
         <div className={cx('rights')}>
           <div className={cx('btn', 'icon')} onClick={showDrafts}>
             <IconDraft />
-            {!!draftDb.atom.get().items?.length && <div className={cx('draft-count')}>{draftDb.atom.get().items.length}</div>}
+            {!!draftItems?.length && <div className={cx('draft-count')}>{draftItems.length}</div>}
           </div>
           <div className={cx('btn', 'icon')}>
             <TagPreview />
