@@ -1,5 +1,13 @@
+import { JsonDb } from 'app/utils/json-service';
+import { localStore } from 'app/utils/localstorage';
 import { Atom } from 'use-atom-view';
-import { JsonDb } from '../../utils/json-service';
+
+export interface Ability {
+  id: number;
+  name: string;
+  desc: string;
+  tags: number[];
+}
 
 function getStatsModeMemo() {
   try {
@@ -29,16 +37,10 @@ export function calcStats() {
   store.merge({ stats });
 }
 
-export interface Ability {
-  id: number;
-  name: string;
-  desc: string;
-  tags: number[];
-  category: string;
-}
+const lsFilterType = localStore<'some' | 'every'>('game-data-editor__filterType', 'some');
 
 export const db = new JsonDb({
-  repo: 'private-cloud',
+  repo: 'TinkGu/private-cloud',
   path: 'match3/ability',
   atom: Atom.of({
     items: [] as Ability[],
@@ -49,6 +51,14 @@ export const db = new JsonDb({
   }),
 });
 
+export const draftDb = new JsonDb({
+  repo: 'TinkGu/private-cloud',
+  path: 'match3/drafts',
+  atom: Atom.of({
+    items: [] as Ability[],
+  }),
+});
+
 export const store = Atom.of({
   /** 当前圈选的 tags */
   tags: [] as number[],
@@ -56,10 +66,18 @@ export const store = Atom.of({
   showStats: getStatsModeMemo(),
   /** 每个标签对应有多少个条目 */
   stats: {} as Record<number, number>,
+  /** 标签筛选模式 */
+  filterType: lsFilterType.get(),
 });
 
 db.subscribe(() => {
   calcStats();
+});
+
+store.subscribe((cur, prev) => {
+  if (cur.filterType !== prev?.filterType) {
+    lsFilterType.set(cur.filterType);
+  }
 });
 
 export function getTag(tagId: number) {

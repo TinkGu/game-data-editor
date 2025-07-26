@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getDataset } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
-import { Modal, toast } from 'app/components';
-import { IconSearch } from 'app/components/icons';
+import { toast } from 'app/components';
+import { IconAll, IconDraft, IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, addAbilityItem } from './ability-item';
 import { showSearch } from './ability-search';
+import { showDrafts } from './drafts';
 import { ExplorePannel } from './explore';
 import { DbTagPicker, editFactor } from './factor-editor';
-import { db, Ability, store, setStatsModeMemo, calcStats } from './state';
+import { llmAbility } from './llm';
+import { showSettings } from './settings';
+import { db, Ability, store, calcStats, draftDb } from './state';
 import { TagPreview } from './tag-preview';
 import styles from './styles.module.scss';
 
@@ -37,12 +39,12 @@ function fullIncludes(a: any[], b: any[]) {
 }
 
 export default function PageEditorAbilityList() {
-  const { tags, showStats } = useAtomView(store);
+  const { tags, showStats, filterType } = useAtomView(store);
   const { items } = useAtomView(db.atom);
   const [records, setRecords] = useState<Ability[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [exploreMode, setExploreMode] = useState(false);
-  const [filterType, setFilterType] = useState<'some' | 'every'>('some');
+  const [isLlmLoading, setIsLlmLoading] = useState(false);
 
   useEffect(() => {
     const list = db.atom.get().items;
@@ -59,6 +61,7 @@ export default function PageEditorAbilityList() {
     async function init() {
       await db.pull();
       calcStats();
+      draftDb.pull();
     }
     init();
   }, []);
@@ -79,36 +82,25 @@ export default function PageEditorAbilityList() {
     }
   };
 
-  const handleChangeFilterType = useDebounceFn(() => {
-    let close = () => {};
-    const handleSelect = async (e: any) => {
-      const { type } = getDataset(e);
-      setFilterType(type);
-      close();
-    };
+  const handleClickLLM = useDebounceFn(async () => {
+    if (isLlmLoading) return;
+    if (tags.length === 0) {
+      toast.info('请至少选择一个标签');
+      return;
+    }
 
-    close = Modal.show({
-      type: 'half-screen',
-      maskClosable: true,
-      content: () => (
-        <div className={cx('modal')}>
-          <div className={cx('selects')}>
-            <div className={cx('select-option')} onClick={handleSelect} data-type="some">
-              含有
-              <span className={cx('tip')}>条目只要含有任意一条选中的标签就可以</span>
-            </div>
-            <div className={cx('select-option')} onClick={handleSelect} data-type="every">
-              重叠
-              <span className={cx('tip')}>条目必须完全含有选中的标签</span>
-            </div>
-          </div>
-        </div>
-      ),
-    });
-  });
-
-  const handleChangeStatsMode = useDebounceFn(() => {
-    setStatsModeMemo(!showStats);
+    setIsLlmLoading(true);
+    try {
+      const res = await llmAbility({ tags });
+      console.log('res', res);
+      draftDb.atom.modify((x) => ({ ...x, items: [...res.items, ...x.items] }));
+      draftDb.save();
+      showDrafts();
+    } catch (err) {
+      console.error(err);
+      toast.error(err);
+    }
+    setIsLlmLoading(false);
   });
 
   if (exploreMode) {
@@ -117,6 +109,7 @@ export default function PageEditorAbilityList() {
 
   return (
     <div className={cx('page-editor')}>
+      <div className={cx('mask', { active: isLlmLoading })}></div>
       <div className={cx('actions')}>
         <div className={cx('btn')} onClick={() => addAbilityItem()}>
           写一条
@@ -124,23 +117,22 @@ export default function PageEditorAbilityList() {
         <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
           {editMode ? '退出修改' : '改标签'}
         </div>
-        <div className={cx('btn')} onClick={() => setExploreMode(true)}>
-          探索
-        </div>
-        <div className={cx('btn')} onClick={handleChangeFilterType}>
-          筛选：
-          <span className={cx('btn-tip')}>{filterType === 'some' ? '含有' : '重叠'}</span>
-        </div>
-        <div className={cx('btn')} onClick={handleChangeStatsMode}>
-          统计：
-          <span className={cx('btn-tip')}>{showStats ? '开' : '关'}</span>
+        <div className={cx('btn')} onClick={handleClickLLM}>
+          {isLlmLoading ? '思考中...' : '🪄AI'}
         </div>
         <div className={cx('rights')}>
+          <div className={cx('btn', 'icon')} onClick={showDrafts}>
+            <IconDraft />
+            {!!draftDb.atom.get().items?.length && <div className={cx('draft-count')}>{draftDb.atom.get().items.length}</div>}
+          </div>
           <div className={cx('btn', 'icon')}>
             <TagPreview />
           </div>
           <div className={cx('btn', 'icon')} onClick={showSearch}>
             <IconSearch />
+          </div>
+          <div className={cx('btn', 'icon')} onClick={showSettings}>
+            <IconAll />
           </div>
         </div>
       </div>

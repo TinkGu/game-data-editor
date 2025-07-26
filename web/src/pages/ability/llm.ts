@@ -1,0 +1,57 @@
+import { getJsonFile } from 'app/utils/json-service';
+import { llmRequest } from 'app/utils/llm-service';
+import { db } from './state';
+
+function getWeight(a: number[], b: number[]) {
+  return a.reduce((acc, tag) => acc + (b.includes(tag) ? 1 : 0), 0);
+}
+
+function extractExamples(tags: number[]) {
+  const { items } = db.atom.get();
+  const records = [...items];
+  const res = [] as any;
+  if (records.length < 0) return res;
+
+  let relateds = [] as any;
+  records.forEach((sk) => {
+    if (sk.tags.some((tag) => tags.includes(tag))) {
+      relateds.push({
+        name: sk.name,
+        desc: sk.desc,
+        tags: [...(sk.tags || [])],
+        // 拥有相似的 tag 越多，权重越高
+        weight: getWeight(sk.tags, tags),
+      });
+    }
+  });
+
+  if (relateds.length >= 5) {
+    relateds.sort((a, b) => b.weight - a.weight);
+    relateds = relateds.slice(0, 3);
+  }
+
+  let relatedCount = 0;
+  // 总共挑选 3 个条目，其中 2 个条目必须包含已选中的 tag，1 个条目不包含已选中的 tag
+  while (relatedCount < 2 && relateds.length > 0) {
+    const randomIndex = Math.floor(Math.random() * relateds.length);
+    const item = relateds[randomIndex];
+    delete item.weight;
+    res.push(relateds[randomIndex]);
+    relateds.splice(randomIndex, 1);
+    relatedCount++;
+  }
+  while (res.length < 3 && records.length > 0) {
+    const randomIndex = Math.floor(Math.random() * records.length);
+    res.push(records[randomIndex]);
+    records.splice(randomIndex, 1);
+  }
+  return res;
+}
+
+export async function llmAbility({ tags, count = 5 }: { tags: number[]; count?: number }) {
+  // 从远端下载脚本并执行
+  const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability', ext: 'js' });
+  const fn = new Function('params', code);
+  const messages = fn({ tags, count, db, examples: extractExamples(tags) });
+  return llmRequest({ messages });
+}
