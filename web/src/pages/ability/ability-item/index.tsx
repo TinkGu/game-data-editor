@@ -31,7 +31,7 @@ export const addAbilityItem = (part?: Partial<Ability>) => {
 };
 
 export const editAbilityItem = (ability: Ability) => {
-  const onDelete = async () => {
+  const handleDelete = async () => {
     db.atom.modify((x) => ({
       ...x,
       items: x.items.filter((x) => x.id !== ability.id),
@@ -39,7 +39,7 @@ export const editAbilityItem = (ability: Ability) => {
     await db.save();
   };
 
-  const onSave = async (value: Ability) => {
+  const handleSave = async (value: Ability) => {
     db.atom.modify((x) => ({
       ...x,
       items: x.items.map((x) => (x.id === value.id ? value : x)),
@@ -52,15 +52,56 @@ export const editAbilityItem = (ability: Ability) => {
     type: 'half-screen',
     content: (onDestory) => (
       <div className={cx('modal')}>
-        <AbilityEditor value={ability} onDestory={onDestory} onSave={onSave} onDelete={onDelete} />
+        <AbilityEditor value={ability} onDestory={onDestory} onSave={handleSave} onDelete={handleDelete} />
       </div>
     ),
   });
 };
 
-export function AbilityItem({ ability }: { ability: Ability }) {
+export function showAbilityEditor({
+  ability,
+  onSave,
+  onDelete,
+}: {
+  ability: Ability;
+  onSave: (ability: Ability) => void;
+  onDelete?: () => void;
+}) {
+  return Modal.show({
+    wrapperClassName: cx('ab-editor-modal'),
+    type: 'half-screen',
+    content: (onDestory) => <AbilityEditor value={ability} onDestory={onDestory} onSave={onSave} onDelete={onDelete} />,
+  });
+}
+
+export function checkAbility(ability: Omit<Ability, 'id'> & { id?: number }) {
+  const name = trim(ability.name || '');
+  const desc = trim(ability.desc || '');
+  const tags = ability.tags.filter((x) => getTag(x));
+  if (!name) throw new Error('未输入name');
+  if (!desc) throw new Error('未输入desc');
+  if (!tags?.length) throw new Error('至少输入一个标签');
+
+  return {
+    id: ability.id || db.uuid(),
+    name,
+    desc,
+    tags,
+  };
+}
+
+export function AbilityItem({
+  ability,
+  disabled,
+  onClick = editAbilityItem,
+}: {
+  ability: Ability;
+  disabled?: boolean;
+  onClick?: (ability: Ability) => void;
+}) {
   const handleEdit = useDebounceFn(() => {
-    editAbilityItem(ability);
+    if (disabled) return;
+    onClick?.(ability);
   });
 
   return (
@@ -84,7 +125,6 @@ export function AbilityItem({ ability }: { ability: Ability }) {
   );
 }
 
-/** 新增特性 */
 function AbilityEditor({
   value,
   onSave,
@@ -120,16 +160,14 @@ function AbilityEditor({
       const name = trim(nameRef.current?.value || '');
       const desc = trim(descRef.current?.value || '');
       const tags = abTags.filter((x) => getTag(x));
-      if (!name) return toast.info('未输入name');
-      if (!desc) return toast.info('未输入desc');
-      if (!tags?.length) return toast.info('至少输入一个标签');
 
-      await onSave({
-        id: value?.id || db.uuid(),
+      const ability = checkAbility({
+        id: value?.id,
         name,
         desc,
         tags,
       });
+      await onSave(ability);
       onDestory();
     } catch (err) {
       console.error(err);
