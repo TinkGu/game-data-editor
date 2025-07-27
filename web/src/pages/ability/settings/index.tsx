@@ -5,7 +5,7 @@ import { Modal, Portal, toast } from 'app/components';
 import { initLlmConfig, llmAtom, saveLocalLlmConfig } from 'app/utils/llm-service';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
-import { lsLlmOutputCount } from '../llm';
+import { lsLlmExamplesCount, lsLlmOutputCount } from '../llm';
 import { setStatsModeMemo, store } from '../state';
 import styles from './styles.module.scss';
 
@@ -133,21 +133,37 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
       content: () => (
         <div className={cx('modal')}>
           <div className={cx('selects')}>
-            <div className={cx('select-option')} onClick={handleSelect} data-count="1">
-              1
-            </div>
-            <div className={cx('select-option')} onClick={handleSelect} data-count="2">
-              2
-            </div>
-            <div className={cx('select-option')} onClick={handleSelect} data-count="3">
-              3
-            </div>
-            <div className={cx('select-option')} onClick={handleSelect} data-count="5">
-              5
-            </div>
-            <div className={cx('select-option')} onClick={handleSelect} data-count="10">
-              10
-            </div>
+            {[1, 2, 3, 5, 10].map((count) => (
+              <div className={cx('select-option')} onClick={handleSelect} data-count={count} key={count}>
+                {count}
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    });
+  });
+
+  const handleChangeLlmExamplesCount = useDebounceFn(() => {
+    let close = () => {};
+    const handleSelect = async (e: any) => {
+      const { count } = getDataset(e);
+      lsLlmExamplesCount.set(count);
+      forceUpdate();
+      close();
+    };
+
+    close = Modal.show({
+      type: 'half-screen',
+      maskClosable: true,
+      content: () => (
+        <div className={cx('modal')}>
+          <div className={cx('selects')}>
+            {[3, 5, 10, 20, 40].map((count) => (
+              <div className={cx('select-option')} onClick={handleSelect} data-count={count} key={count}>
+                {count}
+              </div>
+            ))}
           </div>
         </div>
       ),
@@ -174,6 +190,7 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
         <SettingItem label="提供商" value={provider || '空'} onClick={handleChangeLlm} />
         <SettingItem label="model" value={config.model || '空'} onClick={handleChangeLlm} />
         <SettingItem label="输出条数" value={lsLlmOutputCount.get() || '5'} onClick={handleChangeLlmOutputCount} />
+        <SettingItem label="示例条数" value={lsLlmExamplesCount.get() || '10'} onClick={handleChangeLlmExamplesCount} />
       </div>
     </div>
   );
