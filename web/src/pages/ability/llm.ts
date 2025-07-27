@@ -1,5 +1,6 @@
 import { getJsonFile } from 'app/utils/json-service';
 import { llmRequest } from 'app/utils/llm-service';
+import { localStore } from 'app/utils/localstorage';
 import { db } from './state';
 
 function getWeight(a: number[], b: number[]) {
@@ -48,10 +49,13 @@ function extractExamples(tags: number[]) {
   return res;
 }
 
-export async function llmAbility({ tags, count = 5 }: { tags: number[]; count?: number }) {
+export const lsLlmOutputCount = localStore('game-data-editor__llmOutputCount', '5');
+
+export async function llmAbility({ tags }: { tags: number[] }) {
   // 从远端下载脚本并执行
   const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability', ext: 'js' });
   const fn = new Function('params', code);
+  const count = Number(lsLlmOutputCount.get()) || 5;
   const messages = fn({ tags, count, db, examples: extractExamples(tags) });
   return llmRequest({ messages });
 }

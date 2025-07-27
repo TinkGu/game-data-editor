@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import { getDataset } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, Portal, toast } from 'app/components';
 import { initLlmConfig, llmAtom, saveLocalLlmConfig } from 'app/utils/llm-service';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
+import { lsLlmOutputCount } from '../llm';
 import { setStatsModeMemo, store } from '../state';
 import styles from './styles.module.scss';
 
@@ -22,6 +23,7 @@ function SettingItem({ label, value, onClick }: { label: string; value: string; 
 function SettingsPannel({ onDestory }: { onDestory: () => void }) {
   const { filterType, showStats } = useAtomView(store);
   const { provider, config } = useAtomView(llmAtom);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleChangeFilterType = useDebounceFn(() => {
     let close = () => {};
@@ -116,6 +118,42 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
     });
   });
 
+  const handleChangeLlmOutputCount = useDebounceFn(() => {
+    let close = () => {};
+    const handleSelect = async (e: any) => {
+      const { count } = getDataset(e);
+      lsLlmOutputCount.set(count);
+      forceUpdate();
+      close();
+    };
+
+    close = Modal.show({
+      type: 'half-screen',
+      maskClosable: true,
+      content: () => (
+        <div className={cx('modal')}>
+          <div className={cx('selects')}>
+            <div className={cx('select-option')} onClick={handleSelect} data-count="1">
+              1
+            </div>
+            <div className={cx('select-option')} onClick={handleSelect} data-count="2">
+              2
+            </div>
+            <div className={cx('select-option')} onClick={handleSelect} data-count="3">
+              3
+            </div>
+            <div className={cx('select-option')} onClick={handleSelect} data-count="5">
+              5
+            </div>
+            <div className={cx('select-option')} onClick={handleSelect} data-count="10">
+              10
+            </div>
+          </div>
+        </div>
+      ),
+    });
+  });
+
   useEffect(() => {
     initLlmConfig();
   }, []);
@@ -135,6 +173,7 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
         <div className={cx('section')}>LLM</div>
         <SettingItem label="提供商" value={provider || '空'} onClick={handleChangeLlm} />
         <SettingItem label="model" value={config.model || '空'} onClick={handleChangeLlm} />
+        <SettingItem label="输出条数" value={lsLlmOutputCount.get() || '5'} onClick={handleChangeLlmOutputCount} />
       </div>
     </div>
   );
