@@ -62,3 +62,11 @@ export async function llmAbility({ tags }: { tags: number[] }) {
   const messages = fn({ tags, count, db, examples: extractExamples({ tags, count: examplesCount }) });
   return llmRequest({ messages });
 }
+
+/** 生成条目名称 */
+export async function llmAbilityName({ tags, desc }: { tags: number[]; desc: string }) {
+  const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability-name', ext: 'js' });
+  const fn = new Function('params', code);
+  const messages = fn({ tags, desc, db });
+  return llmRequest({ messages });
+}

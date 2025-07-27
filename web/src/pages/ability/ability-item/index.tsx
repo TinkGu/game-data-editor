@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { trim } from '@tinks/xeno';
+import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
+import { IconAi } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
+import { llmAbilityName } from '../llm';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
 import styles from './styles.module.scss';
@@ -139,6 +141,8 @@ function AbilityEditor({
   const nameRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
   const [abTags, setAbTags] = useState<number[]>([]);
+  const [aiNames, setAiNames] = useState<string[]>([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const handleDelete = useDebounceFn(async () => {
     try {
@@ -190,6 +194,30 @@ function AbilityEditor({
     }
   };
 
+  const handleAiName = useDebounceFn(async () => {
+    if (isAiLoading) return;
+    if (!trim(descRef.current?.value || '')) return toast.error('请先输入描述');
+    if (!abTags.length) return toast.error('请先至少输入 1 个标签');
+    try {
+      setIsAiLoading(true);
+      const res = await llmAbilityName({ tags: abTags, desc: descRef.current!.value });
+      if (res?.items?.length) {
+        setAiNames(res.items);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err);
+    }
+    setIsAiLoading(false);
+  });
+
+  const handleUseAiName = useDebounceFn((e: any) => {
+    const { name } = getDataset(e);
+    if (!name) return;
+    nameRef.current!.value = name;
+    setAiNames([]);
+  });
+
   useEffect(() => {
     if (!value) return;
     if (value.name) {
@@ -223,10 +251,22 @@ function AbilityEditor({
           关闭
         </div>
       </div>
-      <div className={cx('g-text-area')}>
+      <div className={cx('g-text-area', 'title-input')}>
         <span className={cx('sharp')}>#</span>
         <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" />
+        <div className={cx('ai-btn')} onClick={handleAiName}>
+          {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
+        </div>
       </div>
+      {aiNames.length > 0 && (
+        <div className={cx('ai-names')}>
+          {aiNames.map((x) => (
+            <div className={cx('ai-name')} key={x} data-name={x} onClick={handleUseAiName}>
+              {x}
+            </div>
+          ))}
+        </div>
+      )}
       <div>
         <textarea ref={descRef} className={cx('g-input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
       </div>
