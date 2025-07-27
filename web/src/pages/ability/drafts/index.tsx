@@ -19,12 +19,12 @@ function DraftItem({ ability, id }: { ability: Ability; id: number }) {
     draftDb.save();
   });
 
-  const handleSave = useDebounceFn(async () => {
+  const handleSave = useDebounceFn(async (a: Ability) => {
     try {
       const item = checkAbility({
-        name: ability.name,
-        desc: ability.desc,
-        tags: ability.tags,
+        name: a.name,
+        desc: a.desc,
+        tags: a.tags,
       });
       db.atom.modify((x) => ({
         ...x,
@@ -41,7 +41,7 @@ function DraftItem({ ability, id }: { ability: Ability; id: number }) {
   const handleClick = useDebounceFn((ability: Ability) => {
     showAbilityEditor({
       ability,
-      onSave: handleSave,
+      onSave: (a) => handleSave(a),
       onDelete: handleDelete,
     });
   });
@@ -57,7 +57,7 @@ function DraftItem({ ability, id }: { ability: Ability; id: number }) {
             </div>
             <div className={cx('text')}>不喜欢</div>
           </div>
-          <div className={cx('card-action')} onClick={handleSave}>
+          <div className={cx('card-action')} onClick={() => handleSave(ability)}>
             <div className={cx('icon')}>
               <IconSave />
             </div>
