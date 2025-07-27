@@ -107,3 +107,5 @@ dist-ssr
 ./game-data/*.json
 design
 .DS_Store
+
+env
