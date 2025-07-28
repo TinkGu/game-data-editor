@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
-import { IconAi } from 'app/components/icons';
+import { IconAi, IconKeywords } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
+import { showKeywords } from '../keywords-pannel';
 import { llmAbilityName } from '../llm';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
@@ -143,6 +144,7 @@ function AbilityEditor({
   const [abTags, setAbTags] = useState<number[]>([]);
   const [aiNames, setAiNames] = useState<string[]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [keywords, setKeywords] = useState<string[]>([]);
 
   const handleDelete = useDebounceFn(async () => {
     try {
@@ -200,7 +202,7 @@ function AbilityEditor({
     if (!abTags.length) return toast.error('请先至少输入 1 个标签');
     try {
       setIsAiLoading(true);
-      const res = await llmAbilityName({ tags: abTags, desc: descRef.current!.value });
+      const res = await llmAbilityName({ tags: abTags, desc: descRef.current!.value, keywords });
       if (res?.items?.length) {
         setAiNames(res.items);
       }
@@ -216,6 +218,13 @@ function AbilityEditor({
     if (!name) return;
     nameRef.current!.value = name;
     setAiNames([]);
+  });
+
+  const handleKeywords = useDebounceFn(() => {
+    const onSave = (keywords: string[]) => {
+      setKeywords(keywords);
+    };
+    showKeywords({ onSave });
   });
 
   useEffect(() => {
@@ -251,13 +260,27 @@ function AbilityEditor({
           关闭
         </div>
       </div>
-      <div className={cx('g-text-area', 'title-input')}>
+      <div className={cx('title-input')}>
         <span className={cx('sharp')}>#</span>
         <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" />
-        <div className={cx('ai-btn')} onClick={handleAiName}>
-          {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
+        <div className={cx('actions')}>
+          <div className={cx('ai-btn')} onClick={handleAiName}>
+            {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
+          </div>
+          <div className={cx('ai-btn')} onClick={handleKeywords}>
+            <IconKeywords className={cx('ai-icon')} />
+          </div>
         </div>
       </div>
+      {!!keywords.length && (
+        <div className={cx('keyword-section')}>
+          <span className={cx('tip')}>联想关键词：</span>
+          <span className={cx('keywords')}>{keywords.join(',')}</span>
+          <span className={cx('close')} onClick={() => setKeywords([])}>
+            删除
+          </span>
+        </div>
+      )}
       {aiNames.length > 0 && (
         <div className={cx('ai-names')}>
           {aiNames.map((x) => (

@@ -65,12 +65,12 @@ export async function llmAbility({ tags }: { tags: number[] }) {
 }
 
 /** 生成条目名称 */
-export async function llmAbilityName({ tags, desc }: { tags: number[]; desc: string; quick?: boolean }) {
+export async function llmAbilityName({ tags, desc, keywords }: { tags: number[]; desc: string; keywords?: string[] }) {
   const quick = lsLlmQuickMode.get() === '1';
   const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability-name', ext: 'js' });
   const fn = new Function('params', code);
   // 先生成
-  const { messages, temperature } = fn({ tags, desc, db, count: 10, keywords: ['宗教'] });
+  const { messages, temperature } = fn({ tags, desc, db, count: 10, keywords });
   const items = await llmRequest({ messages, temperature });
   console.log(items);
   if (quick) return items;

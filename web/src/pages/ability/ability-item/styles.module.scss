@@ -11,13 +11,6 @@
   text-align: left;
 }
 
-.sharp {
-  color: #888;
-  font-size: 16px;
-  margin-right: 10px;
-  font-family: monospace;
-}
-
 .ability-item {
   padding: 4px 10px;
   font-size: 13px;
@@ -89,22 +82,62 @@
 
 .title-input {
   position: relative;
-}
 
-.ai-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-
-  .ai-icon {
-    width: 16px;
-    height: 16px;
+  .sharp {
+    color: #888;
+    font-size: 16px;
+    margin-right: 10px;
+    font-family: monospace;
   }
 
-  .loading-txt {
-    font-size: 12px;
+  .actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-btn {
+    cursor: pointer;
+    margin-left: 10px;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    .ai-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .loading-txt {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+}
+
+.keyword-section {
+  position: relative;
+  padding: 4px 0;
+  font-size: 12px;
+  line-height: 1;
+  .tip {
     color: #999;
+  }
+  .keywords {
+    color: #666;
+  }
+  .close {
+    margin-left: 10px;
+    background-color: #ededed;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    color: #333;
+    cursor: pointer;
+    line-height: 1;
   }
 }
 

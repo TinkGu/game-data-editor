@@ -59,6 +59,19 @@ export const draftDb = new JsonDb({
   }),
 });
 
+export interface KeywordGroup {
+  name: string;
+  keywords: string[];
+}
+
+export const keywordsDb = new JsonDb({
+  repo: 'TinkGu/private-cloud',
+  path: 'match3/keywords',
+  atom: Atom.of({
+    items: [] as KeywordGroup[],
+  }),
+});
+
 export const store = Atom.of({
   /** 当前圈选的 tags */
   tags: [] as number[],
