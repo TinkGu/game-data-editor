@@ -5,17 +5,20 @@ import { Modal, Portal, toast } from 'app/components';
 import { initLlmConfig, llmAtom, saveLocalLlmConfig } from 'app/utils/llm-service';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
-import { lsLlmExamplesCount, lsLlmOutputCount } from '../llm';
+import { lsLlmExamplesCount, lsLlmOutputCount, lsLlmQuickMode } from '../llm';
 import { setStatsModeMemo, store } from '../state';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
 
-function SettingItem({ label, value, onClick }: { label: string; value: string; onClick: () => void }) {
+function SettingItem({ label, value, onClick, tip }: { label: string; value: string; onClick: () => void; tip?: string }) {
   return (
     <div className={cx('setting-item')} onClick={onClick}>
-      <div className={cx('label')}>{label}</div>
-      <div className={cx('value')}>{value}</div>
+      <div className={cx('setting-item-main')}>
+        <div className={cx('label')}>{label}</div>
+        <div className={cx('value')}>{value}</div>
+      </div>
+      {!!tip && <div className={cx('tip')}>{tip}</div>}
     </div>
   );
 }
@@ -170,6 +173,11 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
     });
   });
 
+  const handleChangeLlmQuickMode = useDebounceFn(() => {
+    lsLlmQuickMode.set(lsLlmQuickMode.get() === '1' ? '0' : '1');
+    forceUpdate();
+  });
+
   useEffect(() => {
     initLlmConfig();
   }, []);
@@ -191,6 +199,12 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
         <SettingItem label="model" value={config.model || '空'} onClick={handleChangeLlm} />
         <SettingItem label="输出条数" value={lsLlmOutputCount.get() || '5'} onClick={handleChangeLlmOutputCount} />
         <SettingItem label="示例条数" value={lsLlmExamplesCount.get() || '10'} onClick={handleChangeLlmExamplesCount} />
+        <SettingItem
+          label="快速模式"
+          value={lsLlmQuickMode.get() === '1' ? '开启中' : '未启用'}
+          onClick={handleChangeLlmQuickMode}
+          tip="对于链式调用的工作流，将减少部分环节，如打分、排序等"
+        />
       </div>
     </div>
   );

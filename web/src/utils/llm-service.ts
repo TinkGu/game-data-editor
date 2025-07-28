@@ -63,7 +63,13 @@ export function saveLocalLlmConfig() {
   localLlmConfig.set({ provider, model: config.model });
 }
 
-export async function llmRequest({ messages }: { messages: { role: 'user' | 'system'; content: string }[] }) {
+export async function llmRequest({
+  messages,
+  temperature = 0.7,
+}: {
+  messages: { role: 'user' | 'system'; content: string }[];
+  temperature?: number;
+}) {
   if (!llmAtom.get().config.apiKey) {
     await initLlmConfig();
   }
@@ -73,7 +79,7 @@ export async function llmRequest({ messages }: { messages: { role: 'user' | 'sys
     {
       model: config.model,
       messages,
-      temperature: 0.7,
+      temperature,
       max_tokens: 1000,
       response_format: { type: 'json_object' },
     },

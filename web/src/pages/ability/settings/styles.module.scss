@@ -53,14 +53,18 @@
 }
 
 .setting-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: relative;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   border-bottom: solid 1px #ededed;
   background-color: #fff;
+
+  .setting-item-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .label {
     color: #444;
@@ -68,6 +72,12 @@
 
   .value {
     color: #36c;
+  }
+
+  .tip {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #999;
   }
 }
 

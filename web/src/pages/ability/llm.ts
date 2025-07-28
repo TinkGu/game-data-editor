@@ -52,6 +52,7 @@ function extractExamples({ tags, count = 5 }: { tags: number[]; count?: number }
 
 export const lsLlmOutputCount = localStore('game-data-editor__llmOutputCount', '5');
 export const lsLlmExamplesCount = localStore('game-data-editor__llmExamplesCount', '10');
+export const lsLlmQuickMode = localStore<string>('game-data-editor__llmQuickMode', '0');
 
 export async function llmAbility({ tags }: { tags: number[] }) {
   // 从远端下载脚本并执行
@@ -64,9 +65,19 @@ export async function llmAbility({ tags }: { tags: number[] }) {
 }
 
 /** 生成条目名称 */
-export async function llmAbilityName({ tags, desc }: { tags: number[]; desc: string }) {
+export async function llmAbilityName({ tags, desc }: { tags: number[]; desc: string; quick?: boolean }) {
+  const quick = lsLlmQuickMode.get() === '1';
   const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability-name', ext: 'js' });
   const fn = new Function('params', code);
-  const messages = fn({ tags, desc, db });
-  return llmRequest({ messages });
+  // 先生成
+  const { messages, temperature } = fn({ tags, desc, db, count: 10, keywords: ['宗教'] });
+  const items = await llmRequest({ messages, temperature });
+  console.log(items);
+  if (quick) return items;
+  const ratingCode = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/ability-name-rating', ext: 'js' });
+  const ratingFn = new Function('params', ratingCode);
+  const { messages: ratingMessages, temperature: ratingTemperature } = ratingFn({ names: items.items, tags, desc, db });
+  const ratingItems = await llmRequest({ messages: ratingMessages, temperature: ratingTemperature });
+  console.log(ratingItems);
+  return ratingItems;
 }
