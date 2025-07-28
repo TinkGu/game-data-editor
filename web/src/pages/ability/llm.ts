@@ -81,3 +81,12 @@ export async function llmAbilityName({ tags, desc, keywords }: { tags: number[];
   console.log(ratingItems);
   return ratingItems;
 }
+
+export async function llmAbilityDesc({ tags, name, desc }: { tags: number[]; name?: string; desc?: string }) {
+  const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability-desc', ext: 'js' });
+  const fn = new Function('params', code);
+  const { messages, temperature } = fn({ tags, name, db, count: 5, desc, examples: extractExamples({ tags, count: 3 }) });
+  const items = await llmRequest({ messages, temperature });
+  console.log(items);
+  return items;
+}

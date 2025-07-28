@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
-import { IconAi, IconKeywords } from 'app/components/icons';
+import { IconAi, IconAiDesc, IconKeywords } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
 import { showKeywords } from '../keywords-pannel';
-import { llmAbilityName } from '../llm';
+import { llmAbilityDesc, llmAbilityName } from '../llm';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
 import styles from './styles.module.scss';
@@ -143,6 +143,7 @@ function AbilityEditor({
   const descRef = useRef<HTMLTextAreaElement>(null);
   const [abTags, setAbTags] = useState<number[]>([]);
   const [aiNames, setAiNames] = useState<string[]>([]);
+  const [aiDescs, setAiDescs] = useState<string[]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
 
@@ -220,6 +221,27 @@ function AbilityEditor({
     setAiNames([]);
   });
 
+  const handleAiDesc = useDebounceFn(async () => {
+    if (isAiLoading) return;
+    if (!abTags.length) return toast.error('请先至少输入 1 个标签');
+    try {
+      setIsAiLoading(true);
+      const res = await llmAbilityDesc({ tags: abTags, name: nameRef.current?.value || '', keywords });
+      if (res?.items?.length) {
+        setAiDescs(res.items);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err);
+    }
+    setIsAiLoading(false);
+  });
+
+  const handleUseAiDesc = useDebounceFn((desc: string) => {
+    descRef.current!.value = desc;
+    setAiDescs([]);
+  });
+
   const handleKeywords = useDebounceFn(() => {
     const onSave = (keywords: string[]) => {
       setKeywords(keywords);
@@ -267,6 +289,11 @@ function AbilityEditor({
           <div className={cx('ai-btn')} onClick={handleAiName}>
             {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
           </div>
+          {!isAiLoading && (
+            <div className={cx('ai-btn')} onClick={handleAiDesc}>
+              <IconAiDesc className={cx('ai-icon')} />
+            </div>
+          )}
           <div className={cx('ai-btn')} onClick={handleKeywords}>
             <IconKeywords className={cx('ai-icon')} />
           </div>
@@ -277,7 +304,7 @@ function AbilityEditor({
           <span className={cx('tip')}>联想关键词：</span>
           <span className={cx('keywords')}>{keywords.join(',')}</span>
           <span className={cx('close')} onClick={() => setKeywords([])}>
-            删除
+            清除
           </span>
         </div>
       )}
@@ -290,9 +317,19 @@ function AbilityEditor({
           ))}
         </div>
       )}
-      <div>
-        <textarea ref={descRef} className={cx('g-input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
-      </div>
+      <textarea ref={descRef} className={cx('g-input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
+      {aiDescs.length > 0 && (
+        <div className={cx('ai-descs')}>
+          {aiDescs.map((x) => (
+            <div className={cx('ai-desc')} key={x} data-desc={x} onClick={() => handleUseAiDesc(x)}>
+              {x}
+            </div>
+          ))}
+          <div className={cx('close')} onClick={() => setAiDescs([])}>
+            清除
+          </div>
+        </div>
+      )}
       <div>
         {abTags.map((x) => {
           const tag = getTag(x);

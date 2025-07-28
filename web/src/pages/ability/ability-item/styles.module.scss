@@ -157,3 +157,25 @@
     }
   }
 }
+
+.ai-descs {
+  position: relative;
+  margin-bottom: 20px;
+  .ai-desc {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    background: #eef7ff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  .close {
+    position: absolute;
+    top: -22px;
+    right: 0;
+    font-size: 12px;
+    color: #36c;
+    cursor: pointer;
+  }
+}
