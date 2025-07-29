@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
-import { useDebounceFn } from '@tinks/xeno/react';
+import { useDebounceFn, useThrottleFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
 import { IconAi, IconAiDelete, IconAiDesc, IconKeywords, IconTag } from 'app/components/icons';
+import { searchSames } from 'app/utils/ability-services';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
 import { showKeywords } from '../keywords-pannel';
 import { llmAbilityDesc, llmAbilityName, llmAbilityTags } from '../llm';
+import { showSames } from '../same-pannel';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
 import styles from './styles.module.scss';
@@ -163,6 +165,20 @@ function AbilityEditor({
   const [aiTags, setAiTags] = useState<number[][]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [sameCount, setSameCount] = useState(0);
+
+  const handleFindSames = useThrottleFn(() => {
+    const sames = searchSames(
+      {
+        id: value?.id || -1,
+        name: trim(nameRef.current?.value || ''),
+        desc: trim(descRef.current?.value || ''),
+        tags: abTags,
+      },
+      db.atom.get().items,
+    );
+    setSameCount(sames.length);
+  }, 5000);
 
   const handleDelete = useDebounceFn(async () => {
     try {
@@ -212,6 +228,7 @@ function AbilityEditor({
     } else {
       setAbTags([...abTags, id]);
     }
+    handleFindSames();
   };
 
   const handleAiName = useDebounceFn(async () => {
@@ -236,6 +253,7 @@ function AbilityEditor({
     if (!name) return;
     nameRef.current!.value = name;
     setAiNames([]);
+    handleFindSames();
   });
 
   const handleAiDesc = useDebounceFn(async () => {
@@ -268,6 +286,7 @@ function AbilityEditor({
   const handleClickActiveTag = useDebounceFn((tag: number) => {
     if (abTags.includes(tag)) {
       setAbTags(abTags.filter((x) => x !== tag));
+      handleFindSames();
     }
   });
 
@@ -289,6 +308,7 @@ function AbilityEditor({
   const handleUseAiTags = useDebounceFn((tags: number[]) => {
     setAbTags(tags);
     setAiTags([]);
+    handleFindSames();
   });
 
   const handleKeywords = useDebounceFn(() => {
@@ -312,8 +332,16 @@ function AbilityEditor({
     }
   }, [value]);
 
+  useEffect(() => {
+    if (!value) return;
+    const hasContent = value.id || value.name || value.desc || value.tags?.length;
+    if (!hasContent) return;
+    const sames = searchSames(value, db.atom.get().items);
+    setSameCount(sames.length);
+  }, [value]);
+
   return (
-    <div className={cx('ability-editor')}>
+    <div className={cx('ability-editor', { 'has-same': sameCount > 0 })}>
       <div className={cx('editor-actions')}>
         <div>
           <div className={cx('btn')} onClick={handleSave}>
@@ -332,9 +360,12 @@ function AbilityEditor({
           关闭
         </div>
       </div>
+      <div className={cx('same-tip')} onClick={showSames}>
+        发现 <span className={cx('same-tip-count')}>{sameCount}</span> 个相似条目
+      </div>
       <div className={cx('title-input')}>
         <span className={cx('sharp')}>#</span>
-        <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" />
+        <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" onChange={handleFindSames} />
         <div className={cx('actions')}>
           <div className={cx('ai-btn')} onClick={handleAiName}>
             {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
