@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
-import { IconAi, IconAiDesc, IconKeywords } from 'app/components/icons';
+import { IconAi, IconAiDelete, IconAiDesc, IconKeywords } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
 import { showKeywords } from '../keywords-pannel';
@@ -243,6 +243,11 @@ function AbilityEditor({
     adjustHeight();
   });
 
+  const handleClearDesc = useDebounceFn(() => {
+    descRef.current!.value = '';
+    adjustHeight();
+  });
+
   const handleKeywords = useDebounceFn(() => {
     const onSave = (keywords: string[]) => {
       setKeywords(keywords);
@@ -298,6 +303,9 @@ function AbilityEditor({
           )}
           <div className={cx('ai-btn')} onClick={handleKeywords}>
             <IconKeywords className={cx('ai-icon')} />
+          </div>
+          <div className={cx('ai-btn')} onClick={handleClearDesc}>
+            <IconAiDelete className={cx('ai-icon')} />
           </div>
         </div>
       </div>

@@ -189,3 +189,14 @@ export function IconAiDesc({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function IconAiDelete({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="#9b9b9b" strokeWidth="4" />
+      <path d="M17 31L31 17" stroke="#9b9b9b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 19L17 17" stroke="#9b9b9b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M31 31L29 29" stroke="#9b9b9b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
