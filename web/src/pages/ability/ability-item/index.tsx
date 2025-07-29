@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { getDataset, trim } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, toast } from 'app/components';
-import { IconAi, IconAiDelete, IconAiDesc, IconKeywords } from 'app/components/icons';
+import { IconAi, IconAiDelete, IconAiDesc, IconKeywords, IconTag } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { DbTagPicker } from '../factor-editor';
 import { showKeywords } from '../keywords-pannel';
-import { llmAbilityDesc, llmAbilityName } from '../llm';
+import { llmAbilityDesc, llmAbilityName, llmAbilityTags } from '../llm';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
 import styles from './styles.module.scss';
@@ -128,6 +128,22 @@ export function AbilityItem({
   );
 }
 
+function TagsViewer({ tags, onClick, className }: { tags: number[]; onClick?: (tag: number) => void; className?: string }) {
+  return (
+    <div className={className}>
+      {tags.map((x) => {
+        const tag = getTag(x);
+        if (!tag) return null;
+        return (
+          <span className={cx('g-tag', 'sm', tag[1] || '')} key={x} onClick={() => onClick?.(x)}>
+            {tag[0]}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function AbilityEditor({
   value,
   onSave,
@@ -144,6 +160,7 @@ function AbilityEditor({
   const [abTags, setAbTags] = useState<number[]>([]);
   const [aiNames, setAiNames] = useState<string[]>([]);
   const [aiDescs, setAiDescs] = useState<string[]>([]);
+  const [aiTags, setAiTags] = useState<number[][]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
 
@@ -226,7 +243,7 @@ function AbilityEditor({
     if (!abTags.length) return toast.error('请先至少输入 1 个标签');
     try {
       setIsAiLoading(true);
-      const res = await llmAbilityDesc({ tags: abTags, name: nameRef.current?.value || '', keywords });
+      const res = await llmAbilityDesc({ tags: abTags, name: nameRef.current?.value || '' });
       if (res?.items?.length) {
         setAiDescs(res.items);
       }
@@ -246,6 +263,32 @@ function AbilityEditor({
   const handleClearDesc = useDebounceFn(() => {
     descRef.current!.value = '';
     adjustHeight();
+  });
+
+  const handleClickActiveTag = useDebounceFn((tag: number) => {
+    if (abTags.includes(tag)) {
+      setAbTags(abTags.filter((x) => x !== tag));
+    }
+  });
+
+  const handleAiTags = useDebounceFn(async () => {
+    if (isAiLoading) return;
+    try {
+      setIsAiLoading(true);
+      const res = await llmAbilityTags({ tags: abTags, name: nameRef.current?.value || '', desc: descRef.current?.value || '' });
+      if (res?.items?.length) {
+        setAiTags(res.items);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err);
+    }
+    setIsAiLoading(false);
+  });
+
+  const handleUseAiTags = useDebounceFn((tags: number[]) => {
+    setAbTags(tags);
+    setAiTags([]);
   });
 
   const handleKeywords = useDebounceFn(() => {
@@ -301,6 +344,11 @@ function AbilityEditor({
               <IconAiDesc className={cx('ai-icon')} />
             </div>
           )}
+          {!isAiLoading && (
+            <div className={cx('ai-btn')} onClick={handleAiTags}>
+              <IconTag className={cx('ai-icon')} />
+            </div>
+          )}
           <div className={cx('ai-btn')} onClick={handleKeywords}>
             <IconKeywords className={cx('ai-icon')} />
           </div>
@@ -346,17 +394,16 @@ function AbilityEditor({
           </div>
         </div>
       )}
-      <div>
-        {abTags.map((x) => {
-          const tag = getTag(x);
-          if (!tag) return null;
-          return (
-            <span className={cx('g-tag', 'sm', tag[1] || '')} key={x}>
-              {tag[0]}
-            </span>
-          );
-        })}
-      </div>
+      <TagsViewer tags={abTags} onClick={handleClickActiveTag} />
+      {aiTags.length > 0 && (
+        <div className={cx('ai-tags')}>
+          {aiTags.map((x, i) => (
+            <div className={cx('ai-tag-item')} key={i} onClick={() => handleUseAiTags(x)}>
+              <TagsViewer tags={x} />
+            </div>
+          ))}
+        </div>
+      )}
       <DbTagPicker tags={abTags} onClick={handleClickTag} className={cx('tags-picker')} />
     </div>
   );
