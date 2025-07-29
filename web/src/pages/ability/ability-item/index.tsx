@@ -240,6 +240,7 @@ function AbilityEditor({
   const handleUseAiDesc = useDebounceFn((desc: string) => {
     descRef.current!.value = desc;
     setAiDescs([]);
+    adjustHeight();
   });
 
   const handleKeywords = useDebounceFn(() => {
@@ -256,6 +257,7 @@ function AbilityEditor({
     }
     if (value.desc) {
       descRef.current!.value = value.desc;
+      adjustHeight();
     }
     if (value.tags?.length) {
       setAbTags(value.tags);
@@ -317,7 +319,13 @@ function AbilityEditor({
           ))}
         </div>
       )}
-      <textarea ref={descRef} className={cx('g-input-style', 'transparent')} placeholder="描述" onInput={adjustHeight} />
+      <textarea
+        ref={descRef}
+        className={cx('g-input-style', 'transparent', 'desc-input')}
+        placeholder="描述"
+        onInput={adjustHeight}
+        rows={1}
+      />
       {aiDescs.length > 0 && (
         <div className={cx('ai-descs')}>
           {aiDescs.map((x) => (

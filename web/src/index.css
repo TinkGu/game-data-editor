@@ -133,4 +133,8 @@ body {
       border: none;
     }
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
