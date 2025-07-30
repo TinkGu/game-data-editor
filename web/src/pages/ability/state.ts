@@ -83,6 +83,10 @@ export const store = Atom.of({
   stats: {} as Record<number, number>,
   /** 标签筛选模式 */
   filterType: lsFilterType.get(),
+  /** 是否正在圈选 AI 样本 */
+  isExamplePicking: false,
+  /** AI 样本 */
+  examples: [] as Ability[],
 });
 
 db.subscribe(() => {
@@ -97,4 +101,17 @@ store.subscribe((cur, prev) => {
 
 export function getTag(tagId: number) {
   return db.atom.get().tagMap[tagId];
+}
+
+export function toggleExample(a: Ability) {
+  const examples = store.get().examples;
+  if (examples.find((x) => x.id === a.id)) {
+    store.merge({ examples: examples.filter((x) => x.id !== a.id) });
+  } else {
+    store.merge({ examples: [...examples, a] });
+  }
+}
+
+export function hasInExamples(id: number) {
+  return store.get().examples.some((x) => x.id === id);
 }

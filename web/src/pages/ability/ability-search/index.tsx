@@ -4,8 +4,9 @@ import { useDebounceFn } from '@tinks/xeno/react';
 import { Portal, toast } from 'app/components';
 import { IconCross, IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
+import { useAtomView } from 'use-atom-view';
 import { AbilityItem } from '../ability-item';
-import { Ability, db } from '../state';
+import { Ability, db, hasInExamples, store, toggleExample } from '../state';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -15,6 +16,7 @@ function getSearchResult(keyword: string) {
 }
 
 function SearchModal({ onDestory }: { onDestory: () => void }) {
+  const { isExamplePicking } = useAtomView(store);
   const [items, setItems] = useState<Ability[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +70,10 @@ function SearchModal({ onDestory }: { onDestory: () => void }) {
 
       <div className={cx('content')}>
         {!items.length && <div className={cx('empty')}>找不到相关结果</div>}
-        {!!items.length && items.map((item) => <AbilityItem ability={item} key={item.id} />)}
+        {!!items.length &&
+          items.map((x) => (
+            <AbilityItem ability={x} key={x.id} onClick={isExamplePicking ? toggleExample : undefined} active={hasInExamples(x.id)} />
+          ))}
       </div>
     </div>
   );

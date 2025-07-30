@@ -12,6 +12,7 @@
 }
 
 .ability-item {
+  position: relative;
   padding: 6px 10px;
   font-size: 14px;
   border-bottom: solid 1px #ededed;
@@ -28,6 +29,26 @@
 
   .tags {
     margin-top: 6px;
+  }
+
+  &.active {
+    background-color: #ebebeb;
+  }
+
+  &.active + &.active {
+    border-top: solid 1px #d6d6d6;
+  }
+
+  .active-badge {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 1;
   }
 }
 
@@ -218,5 +239,26 @@
     padding-top: 10px;
     margin-bottom: 8px;
     cursor: pointer;
+  }
+}
+
+.example-list {
+  position: relative;
+  padding-bottom: 4px;
+  .example-item {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    &::before {
+      content: '#';
+      margin-right: 1px;
+      color: #36c;
+    }
   }
 }

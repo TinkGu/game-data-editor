@@ -4,14 +4,14 @@ import { toast } from 'app/components';
 import { IconAll, IconClear, IconDraft, IconInfo, IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
-import { AbilityItem, addAbilityItem } from './ability-item';
+import { AbilityExampleList, AbilityItem, addAbilityItem } from './ability-item';
 import { showSearch } from './ability-search';
 import { showDrafts } from './drafts';
 import { ExplorePannel } from './explore';
 import { DbTagPicker, editFactor } from './factor-editor';
 import { llmAbility } from './llm';
 import { showSettings } from './settings';
-import { db, Ability, store, calcStats, draftDb } from './state';
+import { db, Ability, store, calcStats, draftDb, toggleExample, hasInExamples } from './state';
 import { showTagPreview } from './tag-preview';
 import { TagsBullet } from './tags-bullet';
 import styles from './styles.module.scss';
@@ -40,7 +40,7 @@ function fullIncludes(a: any[], b: any[]) {
 }
 
 export default function PageEditorAbilityList() {
-  const { tags, showStats, filterType } = useAtomView(store);
+  const { tags, showStats, filterType, isExamplePicking, examples } = useAtomView(store);
   const { items } = useAtomView(db.atom);
   const { items: draftItems } = useAtomView(draftDb.atom);
   const [records, setRecords] = useState<Ability[]>([]);
@@ -88,6 +88,10 @@ export default function PageEditorAbilityList() {
     store.merge({ tags: [] });
   };
 
+  const handleTogglePicking = useDebounceFn(() => {
+    store.modify((x) => ({ ...x, isExamplePicking: !x.isExamplePicking }));
+  });
+
   const handleClickLLM = useDebounceFn(async () => {
     if (isLlmLoading) return;
     if (tags.length === 0) {
@@ -125,6 +129,9 @@ export default function PageEditorAbilityList() {
           <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
             {editMode ? '退出修改' : '改标签'}
           </div>
+          <div className={cx('btn', { active: isExamplePicking })} onClick={handleTogglePicking}>
+            {isExamplePicking ? '退出采样' : '采样'}
+          </div>
           <div className={cx('btn')} onClick={handleClickLLM}>
             {isLlmLoading ? '思考中...' : '🪄AI'}
           </div>
@@ -144,9 +151,12 @@ export default function PageEditorAbilityList() {
             </div>
           </div>
         </div>
-        {!!tags.length && (
+        {(!!tags.length || !!examples.length) && (
           <div className={cx('results-box')}>
-            <TagsBullet className={cx('active-tags')} tags={tags} onClick={(x) => handleClickTag({ id: x })} />
+            <div>
+              <TagsBullet className={cx('active-tags')} tags={tags} onClick={(x) => handleClickTag({ id: x })} />
+              <AbilityExampleList abilities={examples} onClick={toggleExample} />
+            </div>
             <div className={cx('clear-tags')} onClick={handleClearTags}>
               <IconClear />
             </div>
@@ -160,7 +170,7 @@ export default function PageEditorAbilityList() {
             共 <span className={cx('num')}>{records.length}</span> 条
           </div>
           {records.map((x) => (
-            <AbilityItem ability={x} key={x.id} />
+            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} onClick={isExamplePicking ? toggleExample : undefined} />
           ))}
         </div>
       )}
@@ -170,7 +180,7 @@ export default function PageEditorAbilityList() {
             共 <span className={cx('num')}>{items.length}</span> 条
           </div>
           {items.map((x) => (
-            <AbilityItem ability={x} key={x.id} />
+            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} onClick={isExamplePicking ? toggleExample : undefined} />
           ))}
         </div>
       )}

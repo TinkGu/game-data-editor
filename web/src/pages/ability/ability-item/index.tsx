@@ -100,10 +100,12 @@ export function AbilityItem({
   ability,
   disabled,
   onClick = editAbilityItem,
+  active = false,
 }: {
   ability: Ability;
   disabled?: boolean;
   onClick?: (ability: Ability) => void;
+  active?: boolean;
 }) {
   const handleEdit = useDebounceFn(() => {
     if (disabled) return;
@@ -111,7 +113,8 @@ export function AbilityItem({
   });
 
   return (
-    <div className={cx('ability-item')} onClick={handleEdit}>
+    <div className={cx('ability-item', { active })} onClick={handleEdit}>
+      {!!active && <div className={cx('active-badge')}>已选中</div>}
       <div>
         <span className={cx('name')}>{ability.name}</span>
         <span className={cx('desc')}>{ability.desc}</span>
@@ -127,6 +130,33 @@ export function AbilityItem({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+export function AbilityExampleList({
+  abilities,
+  onClick,
+  className,
+}: {
+  abilities: Ability[];
+  onClick?: (x: Ability) => void;
+  className?: string;
+}) {
+  const handleClick = useDebounceFn((e: any) => {
+    const { id } = getDataset(e);
+    const x = abilities.find((x) => x.id === id);
+    if (!x) return;
+    onClick?.(x);
+  });
+
+  return (
+    <div className={cx('example-list', className)}>
+      {abilities.map((x) => (
+        <span className={cx('example-item')} key={x.id} data-id-t="number" data-id={x.id} onClick={handleClick}>
+          {x.name}
+        </span>
+      ))}
     </div>
   );
 }
