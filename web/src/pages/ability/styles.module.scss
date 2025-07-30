@@ -31,6 +31,14 @@
       background: #e6e6e6;
     }
   }
+
+  .page-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: solid 1px #ededed;
+    background: #f6f7f8;
+  }
 }
 
 .root-tags-picker {
@@ -52,20 +60,15 @@
   }
 }
 
-.actions {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+.page-actions {
   display: flex;
   padding: 8px 10px;
   width: 100%;
-  border-bottom: solid 1px #ededed;
-  background: #f6f7f8;
 
   .btn {
     margin-right: 16px;
     color: #36c;
-    font-size: 13px;
+    font-size: 14px;
     height: 19px;
     line-height: 19px;
     cursor: pointer;
@@ -92,9 +95,12 @@
       position: relative;
       margin-right: 10px;
       &.icon {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
         opacity: 0.5;
+      }
+      &:last-of-type {
+        margin-right: 0;
       }
     }
   }
@@ -135,4 +141,25 @@
   font-size: 10px;
   text-align: center;
   line-height: 16px;
+}
+
+.results-box {
+  position: relative;
+  padding: 0 10px;
+
+  display: flex;
+  justify-content: space-between;
+
+  .active-tags {
+    flex: 1;
+  }
+
+  .clear-tags {
+    position: relative;
+    top: -4px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+    cursor: pointer;
+  }
 }

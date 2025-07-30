@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { toast } from 'app/components';
-import { IconAll, IconDraft, IconSearch } from 'app/components/icons';
+import { IconAll, IconClear, IconDraft, IconInfo, IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, addAbilityItem } from './ability-item';
@@ -12,7 +12,8 @@ import { DbTagPicker, editFactor } from './factor-editor';
 import { llmAbility } from './llm';
 import { showSettings } from './settings';
 import { db, Ability, store, calcStats, draftDb } from './state';
-import { TagPreview } from './tag-preview';
+import { showTagPreview } from './tag-preview';
+import { TagsBullet } from './tags-bullet';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -83,6 +84,10 @@ export default function PageEditorAbilityList() {
     }
   };
 
+  const handleClearTags = () => {
+    store.merge({ tags: [] });
+  };
+
   const handleClickLLM = useDebounceFn(async () => {
     if (isLlmLoading) return;
     if (tags.length === 0) {
@@ -112,31 +117,41 @@ export default function PageEditorAbilityList() {
   return (
     <div className={cx('page-editor')}>
       <div className={cx('mask', { active: isLlmLoading })}></div>
-      <div className={cx('actions')}>
-        <div className={cx('btn')} onClick={() => addAbilityItem()}>
-          写一条
-        </div>
-        <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
-          {editMode ? '退出修改' : '改标签'}
-        </div>
-        <div className={cx('btn')} onClick={handleClickLLM}>
-          {isLlmLoading ? '思考中...' : '🪄AI'}
-        </div>
-        <div className={cx('rights')}>
-          <div className={cx('btn', 'icon')} onClick={showDrafts}>
-            <IconDraft />
-            {!!draftItems?.length && <div className={cx('draft-count')}>{draftItems.length}</div>}
+      <div className={cx('page-header')}>
+        <div className={cx('page-actions')}>
+          <div className={cx('btn')} onClick={() => addAbilityItem()}>
+            写一条
           </div>
-          <div className={cx('btn', 'icon')}>
-            <TagPreview />
+          <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
+            {editMode ? '退出修改' : '改标签'}
           </div>
-          <div className={cx('btn', 'icon')} onClick={showSearch}>
-            <IconSearch />
+          <div className={cx('btn')} onClick={handleClickLLM}>
+            {isLlmLoading ? '思考中...' : '🪄AI'}
           </div>
-          <div className={cx('btn', 'icon')} onClick={showSettings}>
-            <IconAll />
+          <div className={cx('rights')}>
+            <div className={cx('btn', 'icon')} onClick={showDrafts}>
+              <IconDraft />
+              {!!draftItems?.length && <div className={cx('draft-count')}>{draftItems.length}</div>}
+            </div>
+            <div className={cx('btn', 'icon')} onClick={showTagPreview}>
+              <IconInfo />
+            </div>
+            <div className={cx('btn', 'icon')} onClick={showSearch}>
+              <IconSearch />
+            </div>
+            <div className={cx('btn', 'icon')} onClick={showSettings}>
+              <IconAll />
+            </div>
           </div>
         </div>
+        {!!tags.length && (
+          <div className={cx('results-box')}>
+            <TagsBullet className={cx('active-tags')} tags={tags} onClick={(x) => handleClickTag({ id: x })} />
+            <div className={cx('clear-tags')} onClick={handleClearTags}>
+              <IconClear />
+            </div>
+          </div>
+        )}
       </div>
       <DbTagPicker className={cx('root-tags-picker')} tags={tags} onClick={handleClickTag} showBadge={showStats} />
       {!!records?.length && (
