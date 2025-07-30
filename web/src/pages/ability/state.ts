@@ -51,11 +51,13 @@ export const db = new JsonDb({
   }),
 });
 
+export type Draft = Ability & { uid: number };
+
 export const draftDb = new JsonDb({
   repo: 'TinkGu/private-cloud',
   path: 'match3/drafts',
   atom: Atom.of({
-    items: [] as Ability[],
+    items: [] as Draft[],
   }),
 });
 

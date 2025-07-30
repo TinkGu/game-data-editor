@@ -59,8 +59,8 @@ export function TagPreview({ className }: { className?: string }) {
   });
 
   return (
-    <span className={cx('tag-preview-btn', className)} onClick={handleClick}>
-      <IconInfo />
+    <span className={cx('tag-preview-btn')} onClick={handleClick}>
+      <IconInfo className={className} />
     </span>
   );
 }

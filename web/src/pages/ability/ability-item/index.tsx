@@ -11,6 +11,7 @@ import { llmAbilityDesc, llmAbilityName, llmAbilityTags } from '../llm';
 import { showSames } from '../same-pannel';
 import { Ability, db, getTag } from '../state';
 import { TagPreview } from '../tag-preview';
+import { TagsBullet } from '../tags-bullet';
 import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
@@ -126,22 +127,6 @@ export function AbilityItem({
           );
         })}
       </div>
-    </div>
-  );
-}
-
-function TagsViewer({ tags, onClick, className }: { tags: number[]; onClick?: (tag: number) => void; className?: string }) {
-  return (
-    <div className={className}>
-      {tags.map((x) => {
-        const tag = getTag(x);
-        if (!tag) return null;
-        return (
-          <span className={cx('g-tag', 'sm', tag[1] || '')} key={x} onClick={() => onClick?.(x)}>
-            {tag[0]}
-          </span>
-        );
-      })}
     </div>
   );
 }
@@ -425,12 +410,12 @@ function AbilityEditor({
           </div>
         </div>
       )}
-      <TagsViewer tags={abTags} onClick={handleClickActiveTag} />
+      <TagsBullet tags={abTags} onClick={handleClickActiveTag} size="sm" />
       {aiTags.length > 0 && (
         <div className={cx('ai-tags')}>
           {aiTags.map((x, i) => (
             <div className={cx('ai-tag-item')} key={i} onClick={() => handleUseAiTags(x)}>
-              <TagsViewer tags={x} />
+              <TagsBullet tags={x} size="sm" />
             </div>
           ))}
         </div>

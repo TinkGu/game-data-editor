@@ -1,4 +1,5 @@
-.page-drafts {
+.page-drafts,
+.focus-pannel {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,7 +9,9 @@
   z-index: 100;
   background-color: #f0f0f0;
   overflow: scroll;
+}
 
+.page-drafts {
   .header {
     position: sticky;
     top: 0;
@@ -29,13 +32,13 @@
 
   .btn {
     display: inline-block;
-    margin-right: 20px;
+    margin-right: 14px;
     font-size: 13px;
     color: #aaa;
     cursor: pointer;
 
     &:last-of-type {
-      margin: 0;
+      margin-right: 0;
     }
 
     &.active {
@@ -51,11 +54,15 @@
     &.danger {
       color: rgb(233, 79, 19);
     }
+  }
 
-    &.icon {
-      width: 16px;
-      height: 16px;
-      opacity: 0.5;
+  .header-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+
+    &.active {
+      opacity: 1;
     }
   }
 
@@ -96,11 +103,199 @@
     color: #666;
     cursor: pointer;
 
+    &:first-of-type {
+      margin-left: 0;
+    }
+
     .icon {
       margin-right: 6px;
       width: 20px;
       height: 20px;
       opacity: 0.5;
     }
+  }
+}
+
+.focus-pannel {
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d2b1a 50%, #1a1a1a 100%);
+
+  .focus-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .capsule {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      color: #f0f0f0;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .filter {
+      padding: 8px 16px;
+      color: #ccc;
+      font-size: 14px;
+    }
+  }
+
+  .focus-body {
+    position: relative;
+
+    &.animating {
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+  }
+
+  .focus-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 60px 20px 0;
+    padding: 40px 20px;
+    height: 320px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    user-select: none;
+    touch-action: pan-y;
+
+    .focus-card-content {
+      flex: 1;
+    }
+
+    &.has-same {
+      padding-bottom: 0;
+      .same-tip {
+        display: block;
+      }
+    }
+
+    .title {
+      margin-bottom: 16px;
+      font-size: 36px;
+      font-weight: 600;
+      color: #000;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .desc {
+      margin-bottom: 20px;
+      word-break: break-all;
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .tags {
+      position: relative;
+    }
+  }
+
+  .same-tip {
+    display: none;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    background-color: hsl(0, 100%, 90%);
+    color: hsl(0, 100%, 30%);
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    .same-tip-count {
+      font-weight: 800;
+    }
+  }
+
+  .focus-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    margin: 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    .action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 60px;
+      position: relative;
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+
+        &.emoji {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 24px 0;
+
+    .btn {
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
   }
 }

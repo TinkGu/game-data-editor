@@ -93,6 +93,14 @@ body {
     border-radius: 2px;
     font-size: 11px;
   }
+
+  &.lg {
+    margin-right: 6px;
+    margin-bottom: 4px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
 }
 
 .g-text-area {
