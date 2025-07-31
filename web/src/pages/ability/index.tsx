@@ -101,7 +101,7 @@ export default function PageEditorAbilityList() {
 
     setIsLlmLoading(true);
     try {
-      const res = await llmAbility({ tags });
+      const res = await llmAbility({ tags, abilityExamples: examples });
       console.log('res', res);
       const drafts = res.items.map((x) => ({ ...x, uid: draftDb.uuid() }));
       draftDb.atom.modify((x) => ({ ...x, items: [...drafts, ...x.items] }));

@@ -1,7 +1,7 @@
 import { getJsonFile } from 'app/utils/json-service';
 import { llmRequest } from 'app/utils/llm-service';
 import { localStore } from 'app/utils/localstorage';
-import { db } from './state';
+import { Ability, db } from './state';
 
 function getWeight(a: number[], b: number[]) {
   return a.reduce((acc, tag) => acc + (b.includes(tag) ? 1 : 0), 0);
@@ -54,13 +54,15 @@ export const lsLlmOutputCount = localStore('game-data-editor__llmOutputCount', '
 export const lsLlmExamplesCount = localStore('game-data-editor__llmExamplesCount', '10');
 export const lsLlmQuickMode = localStore<string>('game-data-editor__llmQuickMode', '0');
 
-export async function llmAbility({ tags }: { tags: number[] }) {
+export async function llmAbility({ tags, abilityExamples }: { tags: number[]; abilityExamples?: Ability[] }) {
   // 从远端下载脚本并执行
   const code = await getJsonFile({ repo: 'TinkGu/private-cloud', path: 'match3/prompts/new-ability', ext: 'js' });
   const fn = new Function('params', code);
   const count = Number(lsLlmOutputCount.get()) || 5;
   const examplesCount = Number(lsLlmExamplesCount.get()) || 10;
-  const messages = fn({ tags, count, db, examples: extractExamples({ tags, count: examplesCount }) });
+  const isCustomExamples = !!abilityExamples?.length;
+  const finalExamples = isCustomExamples ? abilityExamples : extractExamples({ tags, count: examplesCount });
+  const messages = fn({ tags, count, db, examples: finalExamples, exmapleType: isCustomExamples ? 'custom' : 'related' });
   return llmRequest({ messages });
 }
 
