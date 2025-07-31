@@ -6,6 +6,7 @@
   "display": "standalone",
   "lang": "zh-CN",
   "scope": "/game-data-editor/",
+  "theme_color": "#1967d2",
   "icons": [
     { "src": "icons-48.png", "sizes": "48x48" },
     { "src": "icons-144.png", "sizes": "72x72 96x96 128x128 144x144", "purpose": "maskable" },
