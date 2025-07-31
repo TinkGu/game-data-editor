@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/game-data-editor/sw.js', { scope: '/game-data-editor/' })})}
