@@ -4,6 +4,7 @@ import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, Portal, toast } from 'app/components';
 import { IconArrow, IconClear, IconDislike, IconFocus, IconSave, IconStar } from 'app/components/icons';
 import { searchSames } from 'app/utils/ability-services';
+import { setAppTheme } from 'app/utils/app-services';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, checkAbility, showAbilityEditor } from '../ability-item';
@@ -180,6 +181,10 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
     const sames = searchSames(draft, db.atom.get().items);
     setSameCount(sames.length);
   }, [draft]);
+
+  useEffect(() => {
+    return setAppTheme('#1a1a1a');
+  }, []);
 
   if (!draft) {
     return (
