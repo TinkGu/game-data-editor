@@ -56,34 +56,29 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   const minSwipeDistance = 50; // 最小滑动距离
 
   // 动画相关状态
-  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleNext = () => {
     if (current >= items.length - 1) return;
-    setIsAnimating(true);
     setCurrent(current + 1);
-    setTimeout(() => setIsAnimating(false), 300);
   };
 
   const handlePrev = () => {
     if (current <= 0) return;
-    setIsAnimating(true);
     setCurrent(current - 1);
-    setTimeout(() => setIsAnimating(false), 300);
   };
 
   // 触摸开始
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.targetTouches[0].clientY;
-    setIsDragging(true);
+    isDraggingRef.current = true;
     setDragOffset(0);
   };
 
   // 触摸移动
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
     const currentY = e.targetTouches[0].clientY;
     const offset = currentY - touchStartY.current;
     setDragOffset(offset);
@@ -92,7 +87,7 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   // 触摸结束
   const handleTouchEnd = (e: React.TouchEvent) => {
     touchEndY.current = e.changedTouches[0].clientY;
-    setIsDragging(false);
+    isDraggingRef.current = false;
 
     const distance = touchStartY.current - touchEndY.current;
     const isUpSwipe = distance > minSwipeDistance;
@@ -223,13 +218,7 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
           <IconArrow direction="right" color="#f0f0f0" />
         </div>
       </div>
-      <div
-        className={cx('focus-body', { animating: isAnimating })}
-        style={{
-          transform: `translateY(${dragOffset}px)`,
-          transition: isDragging ? 'none' : 'transform 0.3s ease',
-        }}
-      >
+      <div className={cx('focus-body')} style={{ transform: `translateY(${dragOffset}px)` }}>
         <div className={cx('focus-card', { 'has-same': !!sameCount })} onClick={handleClick}>
           <div className={cx('focus-card-content')}>
             <div className={cx('title')}>{draft.name}</div>
