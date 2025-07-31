@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { getDataset } from '@tinks/xeno';
+import { delay, getDataset } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, Portal, toast } from 'app/components';
 import { getGithubToken, setGithubToken } from 'app/utils/app-services';
@@ -184,8 +184,7 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
   });
 
   const handleSetGithubToken = useDebounceFn(() => {
-    let close = () => {};
-    function onOk() {
+    async function onOk() {
       const dom = document.getElementById('game-data-editor__token-input') as HTMLInputElement;
       const token = dom?.value || '';
       if (!token) {
@@ -193,11 +192,12 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
         return;
       }
       setGithubToken(token);
-      toast.info('保存成功');
-      close();
+      toast.info('保存成功，即将自动刷新');
+      await delay(1000);
+      handleRefresh();
     }
 
-    close = Modal.show({
+    Modal.show({
       maskClosable: true,
       title: 'Github Token',
       type: 'custom',
