@@ -60,19 +60,19 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   const [dragOffset, setDragOffset] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleNext = useDebounceFn(() => {
+  const handleNext = () => {
     if (current >= items.length - 1) return;
     setIsAnimating(true);
     setCurrent(current + 1);
     setTimeout(() => setIsAnimating(false), 300);
-  });
+  };
 
-  const handlePrev = useDebounceFn(() => {
+  const handlePrev = () => {
     if (current <= 0) return;
     setIsAnimating(true);
     setCurrent(current - 1);
     setTimeout(() => setIsAnimating(false), 300);
-  });
+  };
 
   // 触摸开始
   const handleTouchStart = (e: React.TouchEvent) => {
