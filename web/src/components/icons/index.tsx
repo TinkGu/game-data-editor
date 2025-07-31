@@ -3,13 +3,13 @@ import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
 
-export function IconInfo({ className }: { className?: string }) {
+export function IconInfo({ className, color = '#4a4a4a' }: { className?: string; color?: string }) {
   return (
     <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M24 44C29.5228 44 34.5228 41.7614 38.1421 38.1421C41.7614 34.5228 44 29.5228 44 24C44 18.4772 41.7614 13.4772 38.1421 9.85786C34.5228 6.23858 29.5228 4 24 4C18.4772 4 13.4772 6.23858 9.85786 9.85786C6.23858 13.4772 4 18.4772 4 24C4 29.5228 6.23858 34.5228 9.85786 38.1421C13.4772 41.7614 18.4772 44 24 44Z"
         fill="none"
-        stroke="#4a4a4a"
+        stroke={color}
         strokeWidth="4"
         strokeLinejoin="round"
       />
@@ -17,9 +17,9 @@ export function IconInfo({ className }: { className?: string }) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M24 37C25.3807 37 26.5 35.8807 26.5 34.5C26.5 33.1193 25.3807 32 24 32C22.6193 32 21.5 33.1193 21.5 34.5C21.5 35.8807 22.6193 37 24 37Z"
-        fill="#4a4a4a"
+        fill={color}
       />
-      <path d="M24 12V28" stroke="#4a4a4a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M24 12V28" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -305,6 +305,112 @@ export function IconArrow({
     >
       <path d="M41.9999 24H5.99994" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M30 12L42 24L30 36" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconAdd({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+        fill="none"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      <path d="M24 16V32" stroke="#4a4a4a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M16 24L32 24" stroke="#4a4a4a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconLlm({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z"
+        fill="none"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M23.5 44C16.5964 44 11 38.4036 11 31.5C11 24.5964 16.5964 19 23.5 19"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M44 23.5C44 30.4036 38.4036 36 31.5 36C24.5964 36 19 30.4036 19 23.5"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M23.5 29C30.4036 29 36 23.4036 36 16.5C36 9.59644 30.4036 4 23.5 4"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M29 23.5C29 16.5964 23.4036 11 16.5 11C9.59644 11 4 16.5964 4 23.5"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconEdit({ className, color = '#4a4a4a' }: { className?: string; color?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M24 24V19L39 4L44 9L29 24H24Z"
+        fill="none"
+        stroke={color}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 24H9C6.23858 24 4 26.2386 4 29C4 31.7614 6.23858 34 9 34H39C41.7614 34 44 36.2386 44 39C44 41.7614 41.7614 44 39 44H18"
+        stroke={color}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconPick({ className }: { className?: string }) {
+  return (
+    <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M48 0H0V48H48V0Z" fill="white" fill-opacity="0.01" />
+      <path
+        d="M34 5H8C6.34315 5 5 6.34315 5 8V34C5 35.6569 6.34315 37 8 37H34C35.6569 37 37 35.6569 37 34V8C37 6.34315 35.6569 5 34 5Z"
+        fill="none"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M43.9998 13.002V42.0001C43.9998 43.1046 43.1044 44.0001 41.9998 44.0001H13.0034"
+        stroke="#4a4a4a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M13 20.4858L18.9997 26.0109L29 15.7192" stroke="#4a4a4a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

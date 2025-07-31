@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { toast } from 'app/components';
-import { IconAll, IconClear, IconDraft, IconInfo, IconSearch } from 'app/components/icons';
+import { IconAdd, IconAll, IconClear, IconDraft, IconEdit, IconInfo, IconLlm, IconPick, IconSearch } from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityExampleList, AbilityItem, addAbilityItem } from './ability-item';
@@ -123,31 +123,16 @@ export default function PageEditorAbilityList() {
       <div className={cx('mask', { active: isLlmLoading })}></div>
       <div className={cx('page-header')}>
         <div className={cx('page-actions')}>
-          <div className={cx('btn')} onClick={() => addAbilityItem()}>
-            写一条
-          </div>
-          <div className={cx('btn', { active: editMode })} onClick={handleEnterEditMode}>
-            {editMode ? '退出修改' : '改标签'}
-          </div>
-          <div className={cx('btn', { active: isExamplePicking })} onClick={handleTogglePicking}>
-            {isExamplePicking ? '退出采样' : '采样'}
-          </div>
-          <div className={cx('btn')} onClick={handleClickLLM}>
-            {isLlmLoading ? '思考中...' : '🪄AI'}
-          </div>
+          <span className={cx('g-tag red lg', 'tag-tag')}>TagTag</span>
           <div className={cx('rights')}>
-            <div className={cx('btn', 'icon')} onClick={showDrafts}>
-              <IconDraft />
-              {!!draftItems?.length && <div className={cx('draft-count')}>{draftItems.length}</div>}
+            <div className={cx('btn', 'icon', { active: editMode })} onClick={handleEnterEditMode}>
+              <IconEdit />
+            </div>
+            <div className={cx('btn', 'icon', { active: isExamplePicking })} onClick={handleTogglePicking}>
+              <IconPick />
             </div>
             <div className={cx('btn', 'icon')} onClick={showTagPreview}>
               <IconInfo />
-            </div>
-            <div className={cx('btn', 'icon')} onClick={showSearch}>
-              <IconSearch />
-            </div>
-            <div className={cx('btn', 'icon')} onClick={showSettings}>
-              <IconAll />
             </div>
           </div>
         </div>
@@ -184,6 +169,36 @@ export default function PageEditorAbilityList() {
           ))}
         </div>
       )}
+
+      {/* 底部悬浮导航栏 */}
+      <div className={cx('bottom-nav')}>
+        <div className={cx('nav-item')} onClick={showDrafts}>
+          <div className={cx('nav-icon')}>
+            <IconDraft />
+            {!!draftItems?.length && <div className={cx('nav-badge')}>{draftItems.length}</div>}
+          </div>
+        </div>
+        <div className={cx('nav-item')} onClick={handleClickLLM}>
+          <div className={cx('nav-icon')}>
+            <IconLlm />
+          </div>
+        </div>
+        <div className={cx('nav-item')} onClick={() => addAbilityItem()}>
+          <div className={cx('nav-icon')}>
+            <IconAdd />
+          </div>
+        </div>
+        <div className={cx('nav-item')} onClick={showSearch}>
+          <div className={cx('nav-icon')}>
+            <IconSearch />
+          </div>
+        </div>
+        <div className={cx('nav-item')} onClick={showSettings}>
+          <div className={cx('nav-icon')}>
+            <IconAll />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

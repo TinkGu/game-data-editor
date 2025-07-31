@@ -1,4 +1,6 @@
 .page-editor {
+  padding-bottom: 200px;
+
   .mask {
     position: fixed;
     top: 0;
@@ -64,6 +66,11 @@
   display: flex;
   padding: 8px 10px;
   width: 100%;
+  background: #fff;
+
+  .tag-tag {
+    margin: 0;
+  }
 
   .btn {
     margin-right: 16px;
@@ -87,16 +94,21 @@
 
   .rights {
     position: absolute;
-    top: 6px;
+    top: 10px;
     right: 10px;
     display: flex;
 
     .btn {
       position: relative;
-      margin-right: 10px;
+      margin-right: 14px;
+      &.active {
+        &.icon {
+          opacity: 1;
+        }
+      }
       &.icon {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         opacity: 0.5;
       }
       &:last-of-type {
@@ -129,37 +141,96 @@
   }
 }
 
-.draft-count {
-  position: absolute;
-  top: -4px;
-  right: -6px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #36c;
-  color: #fff;
-  font-size: 10px;
-  text-align: center;
-  line-height: 16px;
-}
-
 .results-box {
   position: relative;
-  padding: 0 10px;
-
   display: flex;
   justify-content: space-between;
+  padding: 0 10px;
+  background: #fff;
 
   .active-tags {
+    margin-top: 2px;
     flex: 1;
   }
 
   .clear-tags {
+    flex-shrink: 0;
     position: relative;
-    top: -4px;
-    width: 18px;
-    height: 18px;
+    top: -1px;
+    width: 20px;
+    height: 20px;
     opacity: 0.5;
     cursor: pointer;
+  }
+}
+
+// 底部悬浮导航栏
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(224, 224, 224, 0.3);
+  z-index: 2;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 4px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    border-radius: 8px;
+    margin: 0 4px;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .nav-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-text {
+    font-size: 10px;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .nav-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+    line-height: 16px;
+    padding: 0 4px;
+    font-weight: bold;
   }
 }

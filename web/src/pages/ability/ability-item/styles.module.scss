@@ -55,6 +55,7 @@
 .ability-editor {
   width: 100%;
   padding: 10px 16px;
+  padding-bottom: 0;
   min-height: 70vh;
   text-align: left;
 
@@ -67,7 +68,7 @@
       display: inline-block;
       margin-right: 20px;
       font-size: 13px;
-      color: #36c;
+      color: #333;
       cursor: pointer;
 
       &:last-of-type {

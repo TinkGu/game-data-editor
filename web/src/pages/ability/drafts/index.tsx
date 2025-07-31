@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { range } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, Portal, toast } from 'app/components';
-import { IconArrow, IconClear, IconDislike, IconFocus, IconSave, IconStar } from 'app/components/icons';
+import { IconArrow, IconClear, IconDislike, IconFocus, IconInfo, IconSave, IconStar } from 'app/components/icons';
 import { searchSames } from 'app/utils/ability-services';
 import { setAppTheme } from 'app/utils/app-services';
 import classnames from 'classnames/bind';
@@ -10,7 +10,7 @@ import { useAtomView } from 'use-atom-view';
 import { AbilityItem, checkAbility, showAbilityEditor } from '../ability-item';
 import { showSames } from '../same-pannel';
 import { Ability, db, Draft, draftDb } from '../state';
-import { TagPreview } from '../tag-preview';
+import { showTagPreview } from '../tag-preview';
 import { TagsBullet } from '../tags-bullet';
 import styles from './styles.module.scss';
 
@@ -204,6 +204,9 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
           <div className={cx('capsule')}>
             {current + 1}/{items.length}
           </div>
+          <div className={cx('info-btn')} onClick={showTagPreview}>
+            <IconInfo className={cx('info-icon')} color="#f0f0f0" />
+          </div>
           <div className={cx('filter')} onClick={handleTodoFilter}>
             {todoFilterMap[todoFilter]}
           </div>
@@ -366,22 +369,17 @@ function DraftsPannel({ onDestory }: { onDestory: () => void }) {
     <div className={cx('page-drafts')}>
       <div className={cx('header')}>
         <div className={cx('actions')}>
-          <div className={cx('btn')}>共{items.length}条</div>
-          <div className={cx('btn')}>
-            <TagPreview className={cx('header-icon')} />
+          <div className={cx('btn', 'active')} onClick={handleFocus}>
+            <IconFocus className={cx('header-icon')} />
+          </div>
+          <div className={cx('btn')} onClick={showTagPreview}>
+            <IconInfo className={cx('header-icon')} />
           </div>
           <div className={cx('btn', 'danger')} onClick={handleClear}>
             <IconClear className={cx('header-icon')} />
           </div>
-          <div className={cx('btn', 'active')} onClick={handleFocus}>
-            <IconFocus className={cx('header-icon')} />
-          </div>
           <div className={cx('btn')} onClick={handleFilter}>
-            {filter === 'todo' ? (
-              <IconStar className={cx('header-icon', 'active')} color="#c36" />
-            ) : (
-              <IconStar className={cx('header-icon')} />
-            )}
+            <IconStar className={cx('header-icon', { active: filter === 'todo' })} />
           </div>
           <div className={cx('btn', 'close')} onClick={onDestory}>
             退出
@@ -389,6 +387,7 @@ function DraftsPannel({ onDestory }: { onDestory: () => void }) {
         </div>
       </div>
       <div className={cx('content')}>
+        {!!records.length && <div className={cx('tip')}>共{records.length}条</div>}
         {!records.length && <div className={cx('empty')}>草稿箱为空</div>}
         {!!records.length && records.map((item) => <DraftItem draft={item} key={item.uid} />)}
       </div>

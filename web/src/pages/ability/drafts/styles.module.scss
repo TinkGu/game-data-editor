@@ -33,7 +33,7 @@
   .btn {
     display: inline-block;
     margin-right: 14px;
-    font-size: 13px;
+    font-size: 14px;
     color: #aaa;
     cursor: pointer;
 
@@ -57,8 +57,8 @@
   }
 
   .header-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     opacity: 0.5;
 
     &.active {
@@ -69,11 +69,16 @@
   .content {
     padding: 10px 0;
     padding-bottom: 40px;
-    .empty {
+    & > .empty {
       width: 100%;
       font-size: 14px;
       color: #aaa;
       text-align: center;
+    }
+    & > .tip {
+      padding-left: 14px;
+      font-size: 14px;
+      color: #aaa;
     }
   }
 }
@@ -147,8 +152,22 @@
 
     .filter {
       padding: 8px 16px;
+      padding-left: 0;
       color: #ccc;
       font-size: 14px;
+    }
+
+    .info-btn {
+      margin: 010px;
+      cursor: pointer;
+    }
+
+    .info-icon {
+      position: relative;
+      top: -1px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.5;
     }
   }
 

@@ -1,7 +1,7 @@
 import { qsParse } from '@tinks/xeno';
 import { localStore } from './localstorage';
 
-let __currentTheme = '#f6f7f8';
+let __currentTheme = '#fff';
 let __githubToken = '';
 
 /** 设置状态栏颜色 */
