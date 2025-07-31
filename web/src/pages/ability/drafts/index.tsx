@@ -9,7 +9,7 @@ import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, checkAbility, showAbilityEditor } from '../ability-item';
 import { showSames } from '../same-pannel';
-import { Ability, db, Draft, draftDb } from '../state';
+import { Ability, db, Draft, draftDb, store } from '../state';
 import { showTagPreview } from '../tag-preview';
 import { TagsBullet } from '../tags-bullet';
 import styles from './styles.module.scss';
@@ -179,6 +179,14 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
 
   useEffect(() => {
     return setAppTheme('#1a1a1a');
+  }, []);
+
+  // 阻止背景滚动的一个 track
+  useEffect(() => {
+    store.merge({ isFocusing: true });
+    return () => {
+      store.merge({ isFocusing: false });
+    };
   }, []);
 
   if (!draft) {

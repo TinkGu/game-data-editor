@@ -1,6 +1,11 @@
 .page-editor {
   padding-bottom: 200px;
 
+  &.focus {
+    overflow: hidden;
+    height: 100vh;
+  }
+
   .mask {
     position: fixed;
     top: 0;

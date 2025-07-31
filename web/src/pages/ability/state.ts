@@ -87,6 +87,8 @@ export const store = Atom.of({
   isExamplePicking: false,
   /** AI 样本 */
   examples: [] as Ability[],
+  /** 是否正在专注 */
+  isFocusing: false,
 });
 
 db.subscribe(() => {

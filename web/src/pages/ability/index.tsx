@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { toast } from 'app/components';
-import { IconAdd, IconAll, IconClear, IconDraft, IconEdit, IconInfo, IconLlm, IconPick, IconSearch } from 'app/components/icons';
+import {
+  IconAdd,
+  IconAll,
+  IconClear,
+  IconDraft,
+  IconEdit,
+  IconHistory,
+  IconInfo,
+  IconLlm,
+  IconPick,
+  IconSearch,
+} from 'app/components/icons';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityExampleList, AbilityItem, addAbilityItem } from './ability-item';
@@ -9,6 +20,7 @@ import { showSearch } from './ability-search';
 import { showDrafts } from './drafts';
 import { ExplorePannel } from './explore';
 import { DbTagPicker, editFactor } from './factor-editor';
+// import { showHistory } from './history-pannel';
 import { llmAbility } from './llm';
 import { showSettings } from './settings';
 import { db, Ability, store, calcStats, draftDb, toggleExample, hasInExamples } from './state';
@@ -40,7 +52,7 @@ function fullIncludes(a: any[], b: any[]) {
 }
 
 export default function PageEditorAbilityList() {
-  const { tags, showStats, filterType, isExamplePicking, examples } = useAtomView(store);
+  const { tags, showStats, filterType, isExamplePicking, examples, isFocusing } = useAtomView(store);
   const { items } = useAtomView(db.atom);
   const { items: draftItems } = useAtomView(draftDb.atom);
   const [records, setRecords] = useState<Ability[]>([]);
@@ -119,7 +131,7 @@ export default function PageEditorAbilityList() {
   }
 
   return (
-    <div className={cx('page-editor')}>
+    <div className={cx('page-editor', { focus: isFocusing })}>
       <div className={cx('mask', { active: isLlmLoading })}></div>
       <div className={cx('page-header')}>
         <div className={cx('page-actions')}>
@@ -130,6 +142,9 @@ export default function PageEditorAbilityList() {
             </div>
             <div className={cx('btn', 'icon', { active: isExamplePicking })} onClick={handleTogglePicking}>
               <IconPick />
+            </div>
+            <div className={cx('btn', 'icon')} onClick={() => {}}>
+              <IconHistory />
             </div>
             <div className={cx('btn', 'icon')} onClick={showTagPreview}>
               <IconInfo />
