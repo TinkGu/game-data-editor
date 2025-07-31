@@ -1,4 +1,8 @@
+import { qsParse } from '@tinks/xeno';
+import { localStore } from './localstorage';
+
 let __currentTheme = '#f6f7f8';
+let __githubToken = '';
 
 /** 设置状态栏颜色 */
 export function setAppTheme(color: string) {
@@ -11,4 +15,28 @@ export function setAppTheme(color: string) {
   return () => {
     meta?.setAttribute('content', __currentTheme);
   };
+}
+
+const lsGithubToken = localStore<string>('game-data-editor__githubToken', '');
+
+export function getGithubToken() {
+  if (__githubToken) {
+    return __githubToken;
+  }
+  const qsToken = qsParse(window.location.href)?.token;
+  if (qsToken) {
+    __githubToken = qsToken;
+    return qsToken;
+  }
+  const lsToken = lsGithubToken.get();
+  if (lsToken) {
+    __githubToken = lsToken;
+    return lsToken;
+  }
+  return '';
+}
+
+export function setGithubToken(token: string) {
+  lsGithubToken.set(token);
+  __githubToken = token;
 }

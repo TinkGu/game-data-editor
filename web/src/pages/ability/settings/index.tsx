@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { getDataset } from '@tinks/xeno';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { Modal, Portal, toast } from 'app/components';
+import { getGithubToken, setGithubToken } from 'app/utils/app-services';
 import { initLlmConfig, llmAtom, saveLocalLlmConfig } from 'app/utils/llm-service';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
@@ -182,6 +183,40 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
     window.location.reload();
   });
 
+  const handleSetGithubToken = useDebounceFn(() => {
+    let close = () => {};
+    function onOk() {
+      const dom = document.getElementById('game-data-editor__token-input') as HTMLInputElement;
+      const token = dom?.value || '';
+      if (!token) {
+        toast.info('请输入 Github Token');
+        return;
+      }
+      setGithubToken(token);
+      toast.info('保存成功');
+      close();
+    }
+
+    close = Modal.show({
+      maskClosable: true,
+      title: 'Github Token',
+      type: 'custom',
+      content: () => (
+        <div className={cx('token-modal')}>
+          <input
+            id="game-data-editor__token-input"
+            className={cx('g-input-style', 'token-input')}
+            type="text"
+            placeholder="请输入 Github Token"
+          />
+          <div className={cx('ok-btn')} onClick={onOk}>
+            保存
+          </div>
+        </div>
+      ),
+    });
+  });
+
   useEffect(() => {
     initLlmConfig();
   }, []);
@@ -210,7 +245,12 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
           tip="对于链式调用的工作流，将减少部分环节，如打分、排序等"
         />
         <div className={cx('section')}>应用</div>
-        <SettingItem label="刷新" value={''} onClick={handleRefresh} />
+        <SettingItem label="刷新" value="" onClick={handleRefresh} />
+        <SettingItem
+          label="Github Token"
+          value={getGithubToken() ? '****' + getGithubToken().slice(-4) : '空'}
+          onClick={handleSetGithubToken}
+        />
       </div>
     </div>
   );

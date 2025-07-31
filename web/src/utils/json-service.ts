@@ -1,8 +1,6 @@
-import { qsParse } from '@tinks/xeno';
 import axios from 'axios';
 import { Atom } from 'use-atom-view';
-
-const token = qsParse(window.location.href)?.token;
+import { getGithubToken } from './app-services';
 
 let shaMap = {};
 
@@ -12,6 +10,7 @@ const setSHA = ({ repo, path, sha }: { repo: string; path: string; sha: string }
 };
 
 export async function getJsonFile({ repo, path, ext = 'json' }: { repo: string; path: string; ext?: string }) {
+  const token = getGithubToken();
   if (!token) return {};
   const res = await axios.get(`https://api.github.com/repos/${repo}/contents/${path}.${ext}`, {
     headers: {
@@ -35,6 +34,7 @@ export async function getJsonFile({ repo, path, ext = 'json' }: { repo: string; 
 }
 
 async function postGitFile({ repo, path, content }: { repo: string; path: string; content: any }) {
+  const token = getGithubToken();
   if (!token) return;
   console.log(content);
   if (!content || typeof content !== 'object') {
