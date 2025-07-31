@@ -4,8 +4,6 @@
   "description": "TagTag",
   "start_url": "/game-data-editor/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1967d2",
   "lang": "zh-CN",
   "scope": "/game-data-editor/",
   "icons": [
