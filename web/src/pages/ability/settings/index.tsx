@@ -178,6 +178,10 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
     forceUpdate();
   });
 
+  const handleRefresh = useDebounceFn(() => {
+    window.location.reload();
+  });
+
   useEffect(() => {
     initLlmConfig();
   }, []);
@@ -205,6 +209,8 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
           onClick={handleChangeLlmQuickMode}
           tip="对于链式调用的工作流，将减少部分环节，如打分、排序等"
         />
+        <div className={cx('section')}>应用</div>
+        <SettingItem label="刷新" value={''} onClick={handleRefresh} />
       </div>
     </div>
   );
