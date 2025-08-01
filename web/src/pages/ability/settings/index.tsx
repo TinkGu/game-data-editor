@@ -6,6 +6,7 @@ import { getGithubToken, setGithubToken } from 'app/utils/app-services';
 import { initLlmConfig, llmAtom, saveLocalLlmConfig } from 'app/utils/llm-service';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
+import { lsFocusMode } from '../drafts';
 import { lsLlmExamplesCount, lsLlmOutputCount, lsLlmQuickMode } from '../llm';
 import { setStatsModeMemo, store } from '../state';
 import styles from './styles.module.scss';
@@ -217,6 +218,11 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
     });
   });
 
+  const handleChangeFocusMode = useDebounceFn(() => {
+    lsFocusMode.set(lsFocusMode.get() === '1' ? '0' : '1');
+    forceUpdate();
+  });
+
   useEffect(() => {
     initLlmConfig();
   }, []);
@@ -233,6 +239,12 @@ function SettingsPannel({ onDestory }: { onDestory: () => void }) {
       <div className={cx('content')}>
         <SettingItem label="标签筛选模式" value={filterType === 'some' ? '含有' : '重叠'} onClick={handleChangeFilterType} />
         <SettingItem label="统计" value={showStats ? '开' : '关'} onClick={handleChangeStatsMode} />
+        <SettingItem
+          label="专注模式"
+          value={lsFocusMode.get() === '1' ? '开' : '关'}
+          tip="开启后进入草稿箱自动打开专注模式"
+          onClick={handleChangeFocusMode}
+        />
         <div className={cx('section')}>LLM</div>
         <SettingItem label="提供商" value={provider || '空'} onClick={handleChangeLlm} />
         <SettingItem label="model" value={config.model || '空'} onClick={handleChangeLlm} />

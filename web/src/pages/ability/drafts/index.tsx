@@ -5,6 +5,7 @@ import { Modal, Portal, toast } from 'app/components';
 import { IconArrow, IconClear, IconDislike, IconFocus, IconInfo, IconSave, IconStar } from 'app/components/icons';
 import { searchSames } from 'app/utils/ability-services';
 import { setAppTheme } from 'app/utils/app-services';
+import { localStore } from 'app/utils/localstorage';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityItem, checkAbility, showAbilityEditor } from '../ability-item';
@@ -32,6 +33,8 @@ const todoFilterMap = {
   onlyTodo: '不看待办',
   onlyNotTodo: '查看全部',
 };
+
+export const lsFocusMode = localStore<'0' | '1'>('game-data-editor__focusMode', '1');
 
 // 专注模式下，就像短视频一样，支持手势上滑、下拉，切换到下一个/上一个
 function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: number }) {
@@ -171,6 +174,13 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
     setTodoFilter(next);
   });
 
+  const handleClose = useDebounceFn(() => {
+    onDestory();
+    if (lsFocusMode.get() === '1') {
+      showRawDrafts();
+    }
+  });
+
   useEffect(() => {
     if (!draft) return;
     const sames = searchSames(draft, db.atom.get().items);
@@ -192,7 +202,7 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   if (!draft) {
     return (
       <div className={cx('focus-pannel')}>
-        <div className={cx('close-box')} onClick={onDestory}>
+        <div className={cx('close-box')} onClick={handleClose}>
           退出专注
         </div>
         <div className={cx('empty')}>已经清空啦</div>
@@ -214,7 +224,7 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
             {todoFilterMap[todoFilter]}
           </div>
         </div>
-        <div className={cx('capsule')} onClick={onDestory}>
+        <div className={cx('capsule')} onClick={handleClose}>
           退出专注
         </div>
       </div>
@@ -392,10 +402,18 @@ function DraftsPannel({ onDestory }: { onDestory: () => void }) {
   );
 }
 
-export function showDrafts() {
+function showRawDrafts() {
   return Portal.show({
     content: (onDestory) => {
       return <DraftsPannel onDestory={onDestory} />;
     },
   });
+}
+
+export function showDrafts() {
+  if (lsFocusMode.get() === '1') {
+    showFocusPannel();
+    return;
+  }
+  showRawDrafts();
 }
