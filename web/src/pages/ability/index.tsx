@@ -102,7 +102,7 @@ export default function PageEditorAbilityList() {
       <div className={cx('mask', { active: isLlmLoading })}></div>
       <div className={cx('page-header')}>
         <div className={cx('page-actions')}>
-          <span className={cx('g-tag red lg', 'tag-tag')}>TagTag</span>
+          <span className={cx('g-tag purples lg', 'tag-tag')}>TagTag</span>
           <div className={cx('rights')}>
             <div className={cx('btn', 'icon', { active: editMode })} onClick={handleEnterEditMode}>
               <IconEdit />

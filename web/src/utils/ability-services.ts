@@ -37,11 +37,12 @@ function getMemoTags(a: Ability) {
 // 3.1 a.tags 数组完全等于 b.tags，+100 分
 // 3.2 a.tags 数组中包含 b.tags 的元素，每包含一个元素，+10 分，发现不同的元素，-10 分
 export function isAbilitySimilar(a: Ability, b: Ability) {
+  const bigScore = 1000;
   let score = 0;
   if (a.name && b.name) {
     let nameScore = 0;
     if (a.name === b.name) {
-      nameScore = 100;
+      nameScore = bigScore;
     } else {
       const as = getMemoName(a);
       const bs = getMemoName(b);
@@ -52,7 +53,7 @@ export function isAbilitySimilar(a: Ability, b: Ability) {
           }
         }
         if (nameScore === as.size * 10) {
-          nameScore = 100;
+          nameScore = bigScore;
         }
       }
     }
@@ -60,7 +61,7 @@ export function isAbilitySimilar(a: Ability, b: Ability) {
   }
 
   if (a.desc && b.desc && a.desc === b.desc) {
-    score += 100;
+    score += bigScore;
   }
 
   if (a.tags.length && b.tags.length) {

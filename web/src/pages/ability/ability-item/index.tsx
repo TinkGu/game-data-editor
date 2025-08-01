@@ -333,6 +333,14 @@ function AbilityEditor({
     showKeywords({ onSave });
   });
 
+  const handleEditingName = () => {
+    const len = nameRef.current?.value?.length || 0;
+    if (len <= 1) {
+      return;
+    }
+    handleFindSames();
+  };
+
   useEffect(() => {
     if (!value) return;
     if (value.name) {
@@ -380,7 +388,7 @@ function AbilityEditor({
       </div>
       <div className={cx('title-input')}>
         <span className={cx('sharp')}>#</span>
-        <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" onChange={handleFindSames} />
+        <input ref={nameRef} className={cx('g-input-style', 'transparent', 'title')} placeholder="标题" onChange={handleEditingName} />
         <div className={cx('actions')}>
           <div className={cx('ai-btn')} onClick={handleAiName}>
             {isAiLoading ? <span className={cx('loading-txt')}>生成中...</span> : <IconAi className={cx('ai-icon')} />}
