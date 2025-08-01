@@ -13,6 +13,7 @@ import {
   IconPick,
   IconSearch,
 } from 'app/components/icons';
+import { addHistory } from 'app/utils/history';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
 import { AbilityExampleList, AbilityItem, addAbilityItem } from './ability-item';
@@ -20,7 +21,7 @@ import { showSearch } from './ability-search';
 import { showDrafts } from './drafts';
 import { ExplorePannel } from './explore';
 import { DbTagPicker, editFactor } from './factor-editor';
-// import { showHistory } from './history-pannel';
+import { showHistory } from './history-pannel';
 import { llmAbility } from './llm';
 import { showSettings } from './settings';
 import { db, Ability, store, calcStats, draftDb, toggleExample, hasInExamples } from './state';
@@ -119,6 +120,7 @@ export default function PageEditorAbilityList() {
       draftDb.atom.modify((x) => ({ ...x, items: [...drafts, ...x.items] }));
       draftDb.save();
       showDrafts();
+      addHistory({ examples: examples.map((x) => x.id), tags });
     } catch (err) {
       console.error(err);
       toast.error(err);
@@ -143,7 +145,7 @@ export default function PageEditorAbilityList() {
             <div className={cx('btn', 'icon', { active: isExamplePicking })} onClick={handleTogglePicking}>
               <IconPick />
             </div>
-            <div className={cx('btn', 'icon')} onClick={() => {}}>
+            <div className={cx('btn', 'icon')} onClick={showHistory}>
               <IconHistory />
             </div>
             <div className={cx('btn', 'icon')} onClick={showTagPreview}>

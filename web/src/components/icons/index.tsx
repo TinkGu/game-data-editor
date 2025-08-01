@@ -372,8 +372,8 @@ export function IconEdit({ className, color = '#4a4a4a' }: { className?: string;
   return (
     <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M24 24V19L39 4L44 9L29 24H24Z"
         fill="none"
         stroke={color}
@@ -395,7 +395,7 @@ export function IconEdit({ className, color = '#4a4a4a' }: { className?: string;
 export function IconPick({ className }: { className?: string }) {
   return (
     <svg className={cx('icon', className)} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M48 0H0V48H48V0Z" fill="white" fill-opacity="0.01" />
+      <path d="M48 0H0V48H48V0Z" fill="white" fillOpacity="0.01" />
       <path
         d="M34 5H8C6.34315 5 5 6.34315 5 8V34C5 35.6569 6.34315 37 8 37H34C35.6569 37 37 35.6569 37 34V8C37 6.34315 35.6569 5 34 5Z"
         fill="none"
