@@ -17,12 +17,27 @@
     background-color: #fff;
     z-index: 1;
     border-bottom: solid 1px #ededed;
+
+    .header-icon {
+      display: inline-block;
+      margin-left: 20px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.5;
+
+      &:first-of-type {
+        margin-left: 10px;
+      }
+
+      &.active {
+        opacity: 1;
+      }
+    }
   }
 
   .actions {
     padding-top: 6px;
     width: 100%;
-    height: 30px;
   }
 
   .btn {
@@ -58,9 +73,13 @@
   }
 }
 
+.search-tags {
+  padding: 10px 20px;
+}
+
 .search-bar {
   position: relative;
-  padding: 20px;
+  padding: 20px 10px;
   display: flex;
   width: 100%;
 }
@@ -111,5 +130,28 @@
     cursor: pointer;
     opacity: 0.5;
     z-index: 1;
+  }
+}
+
+.results-box {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  background: #fff;
+
+  .active-tags {
+    margin-top: 2px;
+    flex: 1;
+  }
+
+  .clear-tags {
+    flex-shrink: 0;
+    position: relative;
+    top: -1px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    cursor: pointer;
   }
 }

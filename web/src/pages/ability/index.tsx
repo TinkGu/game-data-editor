@@ -1,18 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDebounceFn } from '@tinks/xeno/react';
 import { toast } from 'app/components';
-import {
-  IconAdd,
-  IconAll,
-  IconClear,
-  IconDraft,
-  IconEdit,
-  IconHistory,
-  IconInfo,
-  IconLlm,
-  IconPick,
-  IconSearch,
-} from 'app/components/icons';
+import { IconAdd, IconAll, IconCross, IconDraft, IconEdit, IconHistory, IconInfo, IconLlm, IconSearch } from 'app/components/icons';
+import { fullIncludes, getIntersection } from 'app/utils/array';
 import { addHistory } from 'app/utils/history';
 import classnames from 'classnames/bind';
 import { useAtomView } from 'use-atom-view';
@@ -31,29 +21,8 @@ import styles from './styles.module.scss';
 
 const cx = classnames.bind(styles);
 
-/** 获取两个数组的交集 */
-function getIntersection(a: any[], b: any[]) {
-  if (!a.length || !b.length) {
-    return [];
-  }
-  return a.filter((x) => b.indexOf(x) > -1);
-}
-
-/** a 完整包含 b */
-function fullIncludes(a: any[], b: any[]) {
-  if (!a.length || !b.length) {
-    return false;
-  }
-  for (let x of b) {
-    if (!a.includes(x)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 export default function PageEditorAbilityList() {
-  const { tags, showStats, filterType, isExamplePicking, examples, isFocusing } = useAtomView(store);
+  const { tags, showStats, filterType, examples, isFocusing } = useAtomView(store);
   const { items } = useAtomView(db.atom);
   const { items: draftItems } = useAtomView(draftDb.atom);
   const [records, setRecords] = useState<Ability[]>([]);
@@ -101,10 +70,6 @@ export default function PageEditorAbilityList() {
     store.merge({ tags: [] });
   };
 
-  const handleTogglePicking = useDebounceFn(() => {
-    store.modify((x) => ({ ...x, isExamplePicking: !x.isExamplePicking }));
-  });
-
   const handleClickLLM = useDebounceFn(async () => {
     if (isLlmLoading) return;
     if (tags.length === 0) {
@@ -142,9 +107,6 @@ export default function PageEditorAbilityList() {
             <div className={cx('btn', 'icon', { active: editMode })} onClick={handleEnterEditMode}>
               <IconEdit />
             </div>
-            <div className={cx('btn', 'icon', { active: isExamplePicking })} onClick={handleTogglePicking}>
-              <IconPick />
-            </div>
             <div className={cx('btn', 'icon')} onClick={showHistory}>
               <IconHistory />
             </div>
@@ -160,7 +122,7 @@ export default function PageEditorAbilityList() {
               <AbilityExampleList abilities={examples} onClick={toggleExample} />
             </div>
             <div className={cx('clear-tags')} onClick={handleClearTags}>
-              <IconClear />
+              <IconCross />
             </div>
           </div>
         )}
@@ -172,7 +134,7 @@ export default function PageEditorAbilityList() {
             共 <span className={cx('num')}>{records.length}</span> 条
           </div>
           {records.map((x) => (
-            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} onClick={isExamplePicking ? toggleExample : undefined} />
+            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} />
           ))}
         </div>
       )}
@@ -182,7 +144,7 @@ export default function PageEditorAbilityList() {
             共 <span className={cx('num')}>{items.length}</span> 条
           </div>
           {items.map((x) => (
-            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} onClick={isExamplePicking ? toggleExample : undefined} />
+            <AbilityItem ability={x} key={x.id} active={hasInExamples(x.id)} />
           ))}
         </div>
       )}

@@ -392,7 +392,7 @@ function AbilityEditor({
           )}
           {!isAiLoading && (
             <div className={cx('ai-btn')} onClick={handleAiTags}>
-              <IconTag className={cx('ai-icon')} />
+              <IconTag className={cx('ai-icon')} color="#417505" />
             </div>
           )}
           <div className={cx('ai-btn')} onClick={handleKeywords}>
