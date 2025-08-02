@@ -37,8 +37,7 @@ const todoFilterMap = {
 export const lsFocusMode = localStore<'0' | '1'>('game-data-editor__focusMode', '1');
 
 // 专注模式下，就像短视频一样，支持手势上滑、下拉，切换到下一个/上一个
-function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: number }) {
-  const [_current, setCurrent] = useState(index || 0);
+function FocusPannel({ onDestory, defaultId }: { onDestory: () => void; defaultId?: number }) {
   const [sameCount, setSameCount] = useState(0);
   const { items: rawList } = useAtomView(draftDb.atom);
   const [todoFilter, setTodoFilter] = useState('onlyNotTodo');
@@ -49,6 +48,8 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
     if (todoFilter === 'onlyNotTodo') return !x.tags.includes(todoTagId);
     return true;
   });
+  const defaultIndex = items.findIndex((x) => x.uid === defaultId);
+  const [_current, setCurrent] = useState(defaultIndex === -1 ? 0 : defaultIndex);
   const current = range(0, items.length, _current);
   const draft = items[current];
   const hasTodo = draft?.tags?.includes(getTodoTag() || 0);
@@ -202,8 +203,10 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   if (!draft) {
     return (
       <div className={cx('focus-pannel')}>
-        <div className={cx('close-box')} onClick={handleClose}>
-          退出专注
+        <div className={cx('focus-header')}>
+          <div className={cx('capsule')} onClick={handleClose}>
+            退出专注
+          </div>
         </div>
         <div className={cx('empty')}>已经清空啦</div>
       </div>
@@ -271,11 +274,11 @@ function FocusPannel({ onDestory, index }: { onDestory: () => void; index?: numb
   );
 }
 
-function showFocusPannel(options?: { index?: number }) {
-  const { index } = options || {};
+function showFocusPannel(options?: { defaultId?: number }) {
+  const { defaultId } = options || {};
   return Portal.show({
     content: (onDestory) => {
-      return <FocusPannel onDestory={onDestory} index={index} />;
+      return <FocusPannel onDestory={onDestory} defaultId={defaultId} />;
     },
   });
 }
@@ -290,8 +293,7 @@ function DraftItem({ draft }: { draft: Draft }) {
   });
 
   const handleFocusFrom = useDebounceFn(() => {
-    const index = draftDb.atom.get().items.findIndex((x) => x.uid === draft.uid);
-    showFocusPannel({ index: index === -1 ? 0 : index });
+    showFocusPannel({ defaultId: draft.uid });
   });
 
   const handleSave = useDebounceFn(async (a: Ability) => {
