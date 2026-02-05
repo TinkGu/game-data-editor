@@ -3407,10 +3407,10 @@ update-browserslist-db@^1.1.1, update-browserslist-db@^1.1.3:
     escalade "^3.2.0"
     picocolors "^1.1.1"
 
-use-atom-view@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmmirror.com/use-atom-view/-/use-atom-view-1.2.1.tgz#7791f798882e3f12047fa8f7f505d0cad1227b83"
-  integrity sha512-eUqXH2pVM3eXWfyEmjzWWCivIbsv2L8DoADKxZmi8xu6UYaT1j6qzn9NsXxsokKT6+355W3SdEwqfZZ4RCG+lQ==
+use-atom-view@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.npmmirror.com/use-atom-view/-/use-atom-view-1.3.1.tgz#68f92bbb5347a73986cca0444830b767b0663c43"
+  integrity sha512-CytgxGQvMeVuVFp/0fxfKcQIV9dyXwaoHuRNXhnKuU1zWBAGmcNXCOqnM2TnFX8AUt/gaqA/WJLiAFowyV5uTg==
 
 value-equal@^0.4.0:
   version "0.4.0"
